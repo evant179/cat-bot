@@ -1,6 +1,12 @@
-steps:
-- uses: actions/checkout@v3
-- uses: actions/setup-node@v3
-  with:
-    node-version: 13.14.0
-- run: npm test
+name: Build + deploy cat-bot
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 13.14.0
+    - run: npm test
+    - run: echo "done!!"
