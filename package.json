@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/evant179/cat-bot#readme",
   "devDependencies": {
-    "jest": "^28.1.0",
-    "serverless": "^3.17.0"
+    "jest": "^28.1.0"
   }
 }

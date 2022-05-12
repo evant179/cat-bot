@@ -10,4 +10,4 @@ functions:
   post-twitter:
     handler: index.handler
     environment:
-      TEST_ENV: "i am a test env var2"
+      TEST_ENV: "i am a test env var33"
