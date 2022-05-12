@@ -11,3 +11,10 @@
 
 ## Implementation Details
 - Scrub image metadata
+
+## Installation
+
+```
+nvm install 13.14.0
+nvm use 13.14.0
+```

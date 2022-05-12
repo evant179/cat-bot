@@ -1,0 +1,19 @@
+{
+  "name": "cat-bot",
+  "version": "1.0.0",
+  "description": "- Twitter bot that automatically uploads images from a source on a defined time interval\r - Source of images will be S3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evant179/cat-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/evant179/cat-bot/issues"
+  },
+  "homepage": "https://github.com/evant179/cat-bot#readme"
+}
