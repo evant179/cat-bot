@@ -1,4 +1,4 @@
-service: service-cat-bot
+service: cat-bot
 
 provider:
   name: aws
@@ -7,7 +7,7 @@ provider:
   region: us-east-1
 
 functions:
-  gamecheck:
+  post-twitter:
     handler: index.handler
     environment:
-      TEST_ENV: "i am a test env var"
+      TEST_ENV: "i am a test env var2"
