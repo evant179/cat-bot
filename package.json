@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/evant179/cat-bot/issues"
   },
-  "homepage": "https://github.com/evant179/cat-bot#readme"
+  "homepage": "https://github.com/evant179/cat-bot#readme",
+  "devDependencies": {
+    "jest": "^28.1.0"
+  }
 }
