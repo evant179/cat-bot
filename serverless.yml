@@ -1,0 +1,13 @@
+service: service-cat-bot
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-1
+
+functions:
+  gamecheck:
+    handler: index.handler
+    environment:
+      TEST_ENV: "i am a test env var"
