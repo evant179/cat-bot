@@ -11,3 +11,11 @@ functions:
     handler: index.handler
     environment:
       TEST_ENV: "i am a test env var33"
+
+# The "Resources" your "Functions" use. Raw AWS CloudFormation goes in here.
+resources:
+  Resources:
+    CatBotS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${env:S3_BUCKET_NAME}
