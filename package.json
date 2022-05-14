@@ -4,7 +4,8 @@
   "description": "- Twitter bot that automatically uploads images from a source on a defined time interval\r - Source of images will be S3",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "dev-test": "node test/run-local.js"
   },
   "repository": {
     "type": "git",
