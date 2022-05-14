@@ -38,4 +38,6 @@ Setup local environment variables:
 
 ### How to Run
 
-TODO
+```
+npm run dev-test
+```
