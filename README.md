@@ -18,8 +18,8 @@
 
 Setup `node`:
 ```
-nvm install 13.14.0
-nvm use 13.14.0
+nvm install 14.19.2
+nvm use 14.19.2
 ```
 Setup `direnv`:
 - https://github.com/direnv/direnv
