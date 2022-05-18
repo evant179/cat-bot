@@ -21,7 +21,7 @@ const consumer_secret = process.env.CONSUMER_SECRET;
 // Be sure to add replace the text of the with the text you wish to Tweet.
 // You can also add parameters to post polls, quote Tweets, Tweet with reply settings, and Tweet to Super Followers in addition to other features.
 const data = {
-  "text": "Hello Smoki + Minki!"
+  "text": "SSN= 12938746238791234896809!"
 };
 
 const endpointURL = `https://api.twitter.com/2/tweets`;
