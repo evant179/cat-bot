@@ -9,7 +9,7 @@ jobs:
         with:
           node-version: 14.19.2
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Run unit tests
         run: npm test
       - name: Run linter
