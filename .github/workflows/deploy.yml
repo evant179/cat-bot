@@ -1,15 +1,20 @@
-name: Build + deploy cat-bot
-on: [push]
+name: Deploy
+on:
+  push:
+    branches:
+      - main
 jobs:
-  Explore-GitHub-Actions:
+  pr-merge:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 14.19.2
-      - run: npm install
-      - run: npm test
+      - name: Install dependencies
+        run: npm install
+      - name: Run unit tests
+        run: npm test
       - name: serverless deploy
         uses: serverless/github-action@v3
         with:
