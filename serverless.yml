@@ -8,7 +8,10 @@ provider:
 
 functions:
   post-twitter:
-    handler: index.handler
+    handler: src/index.handler
+    events:
+      - eventBridge:
+          schedule: rate(1 minute)
     environment:
       TEST_ENV: "i am a test env var33"
 
