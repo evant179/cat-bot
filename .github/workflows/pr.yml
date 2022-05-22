@@ -13,4 +13,4 @@ jobs:
       - name: Run unit tests
         run: npm test
       - name: Run linter
-        run: echo "TODO - add linter"
+        run: npm run lint
