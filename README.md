@@ -40,3 +40,7 @@ Setup local environment variables:
 ```
 npm run dev-test
 ```
+
+
+### Docs to read:
+- Twitter dev docs: https://developer.twitter.com/en/docs/platform-overview
