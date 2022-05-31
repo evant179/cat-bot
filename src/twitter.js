@@ -14,14 +14,14 @@ const readline = require('readline').createInterface({
 // To set environment variables on macOS or Linux, run the export commands below from the terminal:
 // export CONSUMER_KEY='YOUR-KEY'
 // export CONSUMER_SECRET='YOUR-SECRET'
-const consumer_key = process.env.CONSUMER_KEY;
-const consumer_secret = process.env.CONSUMER_SECRET;
+const consumer_key = process.env.TWITTER_CONSUMER_KEY;
+const consumer_secret = process.env.TWITTER_CONSUMER_SECRET;
 
 
 // Be sure to add replace the text of the with the text you wish to Tweet.
 // You can also add parameters to post polls, quote Tweets, Tweet with reply settings, and Tweet to Super Followers in addition to other features.
 const data = {
-  "text": "SSN= 12938746238791234896809!"
+  'text': `test!!! ${Date.now()}`
 };
 
 const endpointURL = `https://api.twitter.com/2/tweets`;
@@ -122,16 +122,21 @@ async function getRequest({
 
 (async () => {
   try {
-    // Get request token
-    const oAuthRequestToken = await requestToken();
-    // Get authorization
-    authorizeURL.searchParams.append('oauth_token', oAuthRequestToken.oauth_token);
-    console.log('Please go here and authorize:', authorizeURL.href);
-    const pin = await input('Paste the PIN here: ');
-    // Get the access token
-    const oAuthAccessToken = await accessToken(oAuthRequestToken, pin.trim());
-    // Make the request
-    const response = await getRequest(oAuthAccessToken);
+    // // Get request token
+    // const oAuthRequestToken = await requestToken();
+    // // Get authorization
+    // authorizeURL.searchParams.append('oauth_token', oAuthRequestToken.oauth_token);
+    // console.log('Please go here and authorize:', authorizeURL.href);
+    // const pin = await input('Paste the PIN here: ');
+    // // Get the access token
+    // const oAuthAccessToken = await accessToken(oAuthRequestToken, pin.trim());
+    // // Make the request
+    // console.log('--- oAuthAccessToken: ', oAuthAccessToken);
+    // const response = await getRequest(oAuthAccessToken);
+    const response = await getRequest({
+      oauth_token: process.env.TWITTER_CLIENT_ID,
+      oauth_token_secret: process.env.TWITTER_CLIENT_SECRET,
+    });
     console.dir(response, {
       depth: null
     });
