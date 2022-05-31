@@ -6,7 +6,6 @@
   "scripts": {
     "test": "jest",
     "dev-test": "node test/run-local.js",
-    "dev-twitter": "node src/twitter.js",
     "lint": "npx eslint src/**"
   },
   "repository": {

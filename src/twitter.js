@@ -64,8 +64,3 @@ const createTweet = async () => {
 module.exports = {
   createTweet,
 };
-
-// this is for running twitter.js directly in local development
-createTweet()
-  .then(() => console.log('done running twitter.js'))
-  .catch((e) => console.error('an error occured:', e));
