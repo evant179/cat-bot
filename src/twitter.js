@@ -11,37 +11,39 @@ const {
   TWITTER_CLIENT_SECRET,
 } = process.env;
 
-const data = {
-  'text': `test!!! ${Date.now()}`
-};
-
-const endpointURL = `https://api.twitter.com/2/tweets`;
-
-const oauth = OAuth({
-  consumer: {
-    key: TWITTER_CONSUMER_KEY,
-    secret: TWITTER_CONSUMER_SECRET
-  },
-  signature_method: 'HMAC-SHA1',
-  hash_function: (baseString, key) => crypto.createHmac('sha1', key).update(baseString).digest('base64')
-});
-
-async function getRequest({
-  oauth_token,
-  oauth_token_secret
-}) {
+const createAuthHeader = (url) => {
+  const oauth = OAuth({
+    consumer: {
+      key: TWITTER_CONSUMER_KEY,
+      secret: TWITTER_CONSUMER_SECRET
+    },
+    signature_method: 'HMAC-SHA1',
+    hash_function: (baseString, key) => crypto.createHmac('sha1', key).update(baseString).digest('base64')
+  });
 
   const token = {
-    key: oauth_token,
-    secret: oauth_token_secret
+    key: TWITTER_CLIENT_ID,
+    secret: TWITTER_CLIENT_SECRET,
   };
 
-  const authHeader = oauth.toHeader(oauth.authorize({
-    url: endpointURL,
+  return oauth.toHeader(oauth.authorize({
+    url,
     method: 'POST'
   }, token));
+}
 
-  const req = await axios.post(endpointURL, data, {
+const createBody = () => {
+  return {
+    'text': `test!!! ${Date.now()}`
+  };
+};
+
+const createTweet = async () => {
+  const url = `https://api.twitter.com/2/tweets`;
+  const authHeader = createAuthHeader(url);
+  const body = createBody();
+
+  const response = await axios.post(url, body, {
     headers: {
       Authorization: authHeader["Authorization"],
       'user-agent': "v2CreateTweetJS",
@@ -49,26 +51,16 @@ async function getRequest({
       'accept': "application/json"
     }
   });
-  if (req.data) {
-    return req.data;
+
+  if (response.data) {
+    console.log('Successful tweet!', JSON.stringify(response.data, null, 2));
+    return response.data;
   } else {
+    // TODO - parse useful error message from response
     throw new Error('Unsuccessful request');
   }
 }
 
-
-(async () => {
-  try {
-    const response = await getRequest({
-      oauth_token: TWITTER_CLIENT_ID,
-      oauth_token_secret: TWITTER_CLIENT_SECRET,
-    });
-    console.dir(response, {
-      depth: null
-    });
-  } catch (e) {
-    console.log(e);
-    process.exit(-1);
-  }
-  process.exit();
-})();
+createTweet()
+  .then(() => console.log('done running twitter.js'))
+  .catch((e) => console.error('an error occured:', e));
