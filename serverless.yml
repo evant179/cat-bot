@@ -11,6 +11,7 @@ functions:
     handler: src/index.handler
     events:
       - eventBridge:
+          enabled: false
           schedule: cron(0 2,20 ? * * *)
     environment:
       TEST_ENV: "i am a test env var33"
