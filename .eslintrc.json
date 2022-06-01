@@ -11,8 +11,7 @@
     "ecmaVersion": "latest"
   },
   "ignorePatterns": [
-    "test/**",
-    "src/twitter.js" // TODO - temporary
+    "test/**"
   ],
   "rules": {
     "linebreak-style": ["off"],

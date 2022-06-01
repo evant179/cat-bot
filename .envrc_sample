@@ -1,6 +1,8 @@
 # Twitter configs
-export CONSUMER_KEY=add_me
-export CONSUMER_SECRET=add_me
+export TWITTER_CONSUMER_KEY=add_me
+export TWITTER_CONSUMER_SECRET=add_me
+export TWITTER_CLIENT_ID=add_me
+export TWITTER_CLIENT_SECRET=add_me
 
 # AWS configs
 export AWS_ACCESS_KEY_ID=add_me
