@@ -35,6 +35,8 @@ const createAuthHeader = (url) => {
 };
 
 const uploadImage = async (encodedImage) => {
+  if (!encodedImage) throw new Error('Missing encodedImage');
+
   const url = 'https://upload.twitter.com/1.1/media/upload.json';
   const authHeader = createAuthHeader(url);
   const body = {
@@ -67,6 +69,8 @@ const uploadImage = async (encodedImage) => {
 };
 
 const createTweet = async (mediaId) => {
+  if (!mediaId) throw new Error('Missing mediaId');
+
   const url = 'https://api.twitter.com/2/tweets';
   const authHeader = createAuthHeader(url);
   const body = {
