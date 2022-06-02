@@ -44,3 +44,4 @@ npm run dev-test
 
 ### Docs to read:
 - Twitter dev docs: https://developer.twitter.com/en/docs/platform-overview
+- Reference to setup List/Get/Put S3 permissions: https://github.com/serverless/examples/blob/master/aws-node-fetch-file-and-store-in-s3/serverless.yml

@@ -1,7 +1,7 @@
 {
   "name": "cat-bot",
   "version": "1.0.0",
-  "description": "- Twitter bot that automatically uploads images from a source on a defined time interval\r - Source of images will be S3",
+  "description": "Twitter bot that tweets images from a S3 bucket on a defined time interval",
   "main": "index.js",
   "scripts": {
     "test": "jest",
