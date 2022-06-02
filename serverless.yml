@@ -14,7 +14,10 @@ functions:
           enabled: false
           schedule: cron(0 2,20 ? * * *)
     environment:
-      TEST_ENV: "i am a test env var33"
+      TWITTER_CONSUMER_KEY: ${env:TWITTER_CONSUMER_KEY}
+      TWITTER_CONSUMER_SECRET: ${env:TWITTER_CONSUMER_SECRET}
+      TWITTER_CLIENT_ID: ${env:TWITTER_CLIENT_ID}
+      TWITTER_CLIENT_SECRET: ${env:TWITTER_CLIENT_SECRET}
 
 # The "Resources" your "Functions" use. Raw AWS CloudFormation goes in here.
 resources:
