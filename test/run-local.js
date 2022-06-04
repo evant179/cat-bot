@@ -1,8 +1,6 @@
 const { handler } = require('../src/index');
 
-const event = {
-  testKey: 'TODO - s3 event object',
-};
+const event = {};
 
 handler(event)
   .then(result => console.log('local run successful!', result))
