@@ -8,3 +8,6 @@ export TWITTER_CLIENT_SECRET=add_me
 export AWS_ACCESS_KEY_ID=add_me
 export AWS_SECRET_ACCESS_KEY=add_me
 export S3_BUCKET_NAME=add_me
+
+# Local development flags
+export IS_POSTING_TWEET=true
