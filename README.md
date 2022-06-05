@@ -1,15 +1,8 @@
 # cat-bot
 
+https://twitter.com/daily_cat_bot
+
 Twitter bot that tweets images from a S3 bucket on a defined time interval
-
-## Ideas
-
-### v1
-- Source of images will be S3
-    - Scrub image metadata
-
-### v2
-- Have a staging folder for photos awaiting to be flagged as safe to upload
 
 ## Local Development
 

@@ -31,8 +31,9 @@ const listObjects = async (prefix) => {
     StartAfter: prefix,
   };
   const result = await s3.listObjectsV2(params).promise();
-  console.log('listObjectsV2:', JSON.stringify(result, null, 2));
+  // console.log('listObjectsV2:', JSON.stringify(result, null, 2));
   const { Contents: objects } = result;
+  console.log('Number of objects found:', objects.length);
   return objects;
 };
 
