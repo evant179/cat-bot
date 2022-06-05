@@ -74,7 +74,6 @@ const createTweet = async (mediaId) => {
   const url = 'https://api.twitter.com/2/tweets';
   const authHeader = createAuthHeader(url);
   const body = {
-    text: `test with image! ${Date.now()}`,
     media: {
       media_ids: [mediaId],
     },

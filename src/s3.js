@@ -32,8 +32,21 @@ const listObjects = async (prefix) => {
   };
   const result = await s3.listObjectsV2(params).promise();
   console.log('listObjectsV2:', JSON.stringify(result, null, 2));
+  const { Contents: objects } = result;
+  return objects;
+};
+
+const getObject = async (key) => {
+  const s3 = createS3Client();
+  const params = {
+    Bucket: S3_BUCKET_NAME,
+    Key: key,
+  };
+  const { Body: buffer } = await s3.getObject(params).promise();
+  return buffer;
 };
 
 module.exports = {
+  getObject,
   listObjects,
 };

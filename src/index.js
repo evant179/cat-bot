@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { listObjects } = require('./s3');
+const { getObject, listObjects } = require('./s3');
 const { createTweet, uploadImage } = require('./twitter');
 
 const {
@@ -9,15 +9,27 @@ const {
 
 const isPostingTweet = () => (IS_POSTING_TWEET === 'true');
 
+const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
 const handler = async (event) => {
   console.log(event);
 
+  const objects = await listObjects('staging/');
+  if (!objects.length) {
+    // TODO - reset folder state:
+    //   1. copy all objects from "tweeted" folder to "staging" folder
+    //   2. delete all objects in "tweeted" folder
+    //   3. call handler again
+    throw new Error('No images found in staging folder');
+  }
+
+  const { Key: key } = getRandomItem(objects);
+  console.log('Attempt to retrieve from s3 -- key:', key);
+  const buffer = await getObject(key);
+  console.log('Attempt to encode image -- key:', key);
+  const encodedImage = buffer.toString('base64');
+
   try {
-    await listObjects('staging/');
-
-    // TODO - reading local image for now
-    const encodedImage = fs.readFileSync('test/data/test-image.png').toString('base64');
-
     if (isPostingTweet()) {
       const mediaId = await uploadImage(encodedImage);
       await createTweet(mediaId);
