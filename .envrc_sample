@@ -10,4 +10,5 @@ export LOCAL_AWS_SECRET_ACCESS_KEY=add_me
 export S3_BUCKET_NAME=add_me
 
 # Local development flags
-export IS_POSTING_TWEET=true
+export IS_TWEETING_ENABLED=true
+export IS_S3_POST_PROCESSING_ENABLED=true

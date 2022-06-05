@@ -1,13 +1,16 @@
-const fs = require('fs');
 const s3 = require('./s3');
 const twitter = require('./twitter');
 
 const {
-  // feature flags for local development
-  IS_POSTING_TWEET = 'true',
+  // Feature flags for local development.
+  // Note: Lambdas store config values as strings, which is why
+  //   booleans are not used here
+  IS_TWEETING_ENABLED = 'true',
+  IS_S3_POST_PROCESSING_ENABLED = 'true',
 } = process.env;
 
-const isPostingTweet = () => (IS_POSTING_TWEET === 'true');
+const isTweetingEnabled = () => (IS_TWEETING_ENABLED === 'true');
+const isS3PostProcessingEnabled = () => (IS_S3_POST_PROCESSING_ENABLED === 'true');
 
 const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
@@ -28,11 +31,11 @@ const handler = async (event) => {
   const encodedImage = buffer.toString('base64');
 
   try {
-    if (isPostingTweet()) {
+    if (isTweetingEnabled()) {
       const mediaId = await twitter.uploadImage(encodedImage);
       await twitter.createTweet(mediaId);
     } else {
-      console.log('Skip tweeting -- IS_POSTING_TWEET:', IS_POSTING_TWEET);
+      console.log('Skip tweeting -- IS_TWEETING_ENABLED:', IS_TWEETING_ENABLED);
     }
   } catch (e) {
     const { response = {} } = e;
@@ -41,8 +44,15 @@ const handler = async (event) => {
     throw e;
   }
 
-  console.log('Attempt to move object to \'tweeted\' folder -- key:', key);
-  await s3.moveObject(key, 'staging/', 'tweeted/');
+  if (isS3PostProcessingEnabled()) {
+    console.log('Attempt to move object to \'tweeted\' folder -- key:', key);
+    await s3.moveObject(key, 'staging/', 'tweeted/');
+  } else {
+    console.log(
+      'Skip s3 post processing -- IS_S3_POST_PROCESSING_ENABLED:',
+      IS_S3_POST_PROCESSING_ENABLED,
+    );
+  }
 
   console.log('Done!');
   return event;
