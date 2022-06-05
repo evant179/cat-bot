@@ -5,8 +5,8 @@ export TWITTER_CLIENT_ID=add_me
 export TWITTER_CLIENT_SECRET=add_me
 
 # AWS configs
-export AWS_ACCESS_KEY_ID=add_me
-export AWS_SECRET_ACCESS_KEY=add_me
+export LOCAL_AWS_ACCESS_KEY_ID=add_me
+export LOCAL_AWS_SECRET_ACCESS_KEY=add_me
 export S3_BUCKET_NAME=add_me
 
 # Local development flags
