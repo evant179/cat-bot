@@ -47,7 +47,27 @@ const getObject = async (key) => {
   return buffer;
 };
 
+const moveObject = async (key, oldPrefix, newPrefix) => {
+  // s3 does not offer a 'move', instead, perform a 'copy' then 'delete'
+  const s3 = createS3Client();
+
+  const newKey = key.replace(oldPrefix, newPrefix);
+  const copyParams = {
+    Bucket: S3_BUCKET_NAME, // destination bucket
+    CopySource: `/${S3_BUCKET_NAME}/${key}`, // target /bucket/key
+    Key: newKey, // destination key
+  };
+  await s3.copyObject(copyParams).promise();
+
+  const deleteParams = {
+    Bucket: S3_BUCKET_NAME,
+    Key: key,
+  };
+  await s3.deleteObject(deleteParams).promise();
+};
+
 module.exports = {
   getObject,
   listObjects,
+  moveObject,
 };

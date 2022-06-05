@@ -41,6 +41,10 @@ const handler = async (event) => {
     throw e;
   }
 
+  console.log('Attempt to move object to \'tweeted\' folder -- key:', key);
+  await s3.moveObject(key, 'staging/', 'tweeted/');
+
+  console.log('Done!');
   return event;
 };
 
