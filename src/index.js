@@ -13,7 +13,7 @@ const handler = async (event) => {
   console.log(event);
 
   try {
-    await listObjects();
+    await listObjects('staging/');
 
     // TODO - reading local image for now
     const encodedImage = fs.readFileSync('test/data/test-image.png').toString('base64');

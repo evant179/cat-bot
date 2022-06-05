@@ -1,0 +1,27 @@
+{
+  "IsTruncated": false,
+  "Contents": [
+    {
+      "Key": "staging/PXL_20210428_030202654.jpg",
+      "LastModified": "2022-06-05T01:16:52.000Z",
+      "ETag": "\"baf00df6ede8022030c0be383f57395a\"",
+      "ChecksumAlgorithm": [],
+      "Size": 988651,
+      "StorageClass": "STANDARD"
+    },
+    {
+      "Key": "staging/Screenshot 2021-10-01 154847.png",
+      "LastModified": "2022-06-05T01:16:52.000Z",
+      "ETag": "\"f5944dfb30d3a85d0973209944321d54\"",
+      "ChecksumAlgorithm": [],
+      "Size": 4060280,
+      "StorageClass": "STANDARD"
+    }
+  ],
+  "Name": "cat-bot-bucket",
+  "Prefix": "staging/",
+  "MaxKeys": 1000,
+  "CommonPrefixes": [],
+  "KeyCount": 2,
+  "StartAfter": "staging/"
+}
