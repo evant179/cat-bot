@@ -4,6 +4,20 @@ https://twitter.com/daily_cat_bot
 
 Twitter bot that tweets images from a S3 bucket on a defined time interval
 
+## Background
+
+The bot randomly chooses an image from a manually catered set and tweets it. Simple! The entire application is hosted in AWS, and the only manual intervention involves uploading the images to a `staging` folder, where it waits its turn to be tweeted.
+
+Here's how the AWS services are utilized:
+
+| AWS Service | Usage |
+| --- | --- |
+| Lambda | This is where the bot's code implementation lives. The lambda orchestrates S3 and Twitter calls. |
+| S3 | Images are stored here. The `staging` folder contains images waiting to be tweeted. The `tweeted` folder contains images that have been successfully tweeted. |
+| EventBridge | A rule schedules calls to the lambda based on a `cron` expression. Essentially, this controls when tweets are posted. Note: this was formaly done in CloudWatch. |
+
+TODO - sequence diagrams
+
 ## Local Development
 
 ### Prerequisites
@@ -29,7 +43,8 @@ Setup local environment variables:
     ```
 
 ### Scripts
-Running the lambda locally:
+
+Running the code locally (this mimics a lamnda running in AWS):
 ```
 npm run dev-test
 ```
@@ -44,7 +59,23 @@ Running the linter:
 npm run lint
 ```
 
-### Docs to read:
+## Configuration
+
+The [`.envrc_sample`](.envrc_sample) contains configuration values that are used by the lambda and for local development convenience.
+
+| Name | Description | Required |
+| --- | --- | --- |
+| TWITTER_CONSUMER_KEY | Used to authenticate against the Twitter developer app. | Yes |
+| TWITTER_CONSUMER_SECRET | Used to authenticate against the Twitter developer app. | Yes |
+| TWITTER_CLIENT_ID | Used to authenticate against the Twitter user account. | Yes |
+| TWITTER_CLIENT_SECRET | Used to authenticate against the Twitter user account. | Yes |
+| LOCAL_AWS_ACCESS_KEY_ID | Only used for local development to authenticate against AWS. When this code is run within a lambda, the permissions are gained through its IAM role. | Yes |
+| LOCAL_AWS_SECRET_ACCESS_KEY | Only used for local development to authenticate against AWS. When this code is run within a lambda, the permissions are gained through its IAM role. | Yes |
+| S3_BUCKET_NAME | S3 bucket name used for storing images. | Yes |
+| IS_TWEETING_ENABLED | Feature flag that can be toggled based on local development needs. Defaults to true. | No |
+| IS_S3_POST_PROCESSING_ENABLED | Feature flag that can be toggled based on local development needs. Defaults to true. | No |
+
+## Docs to read:
 - Twitter dev docs: https://developer.twitter.com/en/docs/platform-overview
 - Reference to setup List/Get/Put S3 permissions: https://github.com/serverless/examples/blob/master/aws-node-fetch-file-and-store-in-s3/serverless.yml
 - Node.js and the AWS SDK: https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/getting-started-nodejs.html
