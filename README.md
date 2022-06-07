@@ -42,5 +42,7 @@ npm run dev-test
 ```
 
 
-### Docs to read:
-- Twitter dev docs: https://developer.twitter.com/en/docs/platform-overview
+### High level diagram of cat-bot functionality :
+
+
+![Alt text](https://raw.githubusercontent.com/evant179/cat-bot/matbranch/cat-bot.png?token=GHSAT0AAAAAABU6ULIKQU3SA72QKLFIK4RIYU7A5LQ)
