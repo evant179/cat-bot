@@ -105,3 +105,4 @@ dist
 
 # custom
 .envrc
+.envrc_tmp

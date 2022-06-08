@@ -5,15 +5,34 @@ provider:
   runtime: nodejs14.x
   stage: dev
   region: us-east-1
+  iam:
+    role:
+      statements:
+        # Allow functions to list objects in bucket
+        - Effect: Allow
+          Action: 's3:ListBucket'
+          Resource:
+            - 'arn:aws:s3:::${env:S3_BUCKET_NAME}'
+        # Allow functions to read/write objects in bucket
+        - Effect: Allow
+          Action:
+            - 's3:CopyObject'
+            - 's3:DeleteObject'
+            - 's3:GetObject'
+            - 's3:PutObject'
+          Resource:
+            - 'arn:aws:s3:::${env:S3_BUCKET_NAME}/*'
 
 functions:
   post-twitter:
     handler: src/index.handler
+    timeout: 120 # seconds
     events:
       - eventBridge:
-          enabled: false
+          enabled: true
           schedule: cron(0 2,20 ? * * *)
     environment:
+      S3_BUCKET_NAME: ${env:S3_BUCKET_NAME}
       TWITTER_CONSUMER_KEY: ${env:TWITTER_CONSUMER_KEY}
       TWITTER_CONSUMER_SECRET: ${env:TWITTER_CONSUMER_SECRET}
       TWITTER_CLIENT_ID: ${env:TWITTER_CLIENT_ID}
