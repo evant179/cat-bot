@@ -75,6 +75,10 @@ The [`.envrc_sample`](.envrc_sample) contains configuration values that are used
 | IS_TWEETING_ENABLED | Feature flag that can be toggled based on local development needs. Defaults to true. | No |
 | IS_S3_POST_PROCESSING_ENABLED | Feature flag that can be toggled based on local development needs. Defaults to true. | No |
 
+## High level diagram of cat-bot functionality :
+
+![Alt text](./cat-bot.png)
+
 ## Docs to read:
 - Twitter dev docs: https://developer.twitter.com/en/docs/platform-overview
 - Reference to setup List/Get/Put S3 permissions: https://github.com/serverless/examples/blob/master/aws-node-fetch-file-and-store-in-s3/serverless.yml
