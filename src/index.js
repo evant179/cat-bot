@@ -24,6 +24,7 @@ const handler = async (event) => {
     throw new Error('No images found in staging folder');
   }
 
+  // to test the newly added moveObject function in the catch block, set the key const to the key of and image with a file size of > 5MB and then comment out line 28
   const { Key: key } = getRandomItem(objects);
   console.log('Attempt to retrieve from s3 -- key:', key);
   const buffer = await s3.getObject(key);
