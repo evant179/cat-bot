@@ -34,10 +34,17 @@ const handler = async (event) => {
     if (isTweetingEnabled()) {
       const mediaId = await twitter.uploadImage(encodedImage);
       await twitter.createTweet(mediaId);
+      //apply a try/catch to this call of createTweet?
+      //creatTweet is already in a try block so if it thows an error it should be caught in the following error block
     } else {
       console.log('Skip tweeting -- IS_TWEETING_ENABLED:', IS_TWEETING_ENABLED);
     }
   } catch (e) {
+    
+    // put moveObject here?
+    await s3.moveObject(key, 'staging/', 'quarantine/')
+    // I think this is probably the correct solution
+    
     const { response = {} } = e;
     const { data } = response;
     console.error('Twitter error details:', data);
