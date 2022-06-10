@@ -25,7 +25,9 @@ const handler = async (event) => {
   }
 
   // to test the newly added moveObject function in the catch block, set the key const to the key of and image with a file size of > 5MB and then comment out line 28
-  const { Key: key } = getRandomItem(objects);
+  // try using staging/PXL_20220603_022926496.MP.jpg. The file size is 11.1MB
+  //const { Key: key } = getRandomItem(objects);
+  const key = 'staging/PXL_20220603_022926496.MP.jpg'
   console.log('Attempt to retrieve from s3 -- key:', key);
   const buffer = await s3.getObject(key);
   console.log('Attempt to encode image -- key:', key);
