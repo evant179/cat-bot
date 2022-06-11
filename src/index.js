@@ -24,15 +24,7 @@ const handler = async (event) => {
     throw new Error('No images found in staging folder');
   }
 
-  // to test the newly added moveObject
-  // function in the catch block, set the
-  // key const to the key of and image
-  // with a file size of > 5MB and then
-  // comment out line 34
-  // try using staging/PXL_20220603_022926496.MP.jpg.
-  // The file size is 11.1MB
-  // const { Key: key } = getRandomItem(objects);
-  const key = 'staging/PXL_20220603_022926496.MP.jpg';
+  const { Key: key } = getRandomItem(objects);
   console.log('Attempt to retrieve from s3 -- key:', key);
   const buffer = await s3.getObject(key);
   console.log('Attempt to encode image -- key:', key);
@@ -42,19 +34,14 @@ const handler = async (event) => {
     if (isTweetingEnabled()) {
       const mediaId = await twitter.uploadImage(encodedImage);
       await twitter.createTweet(mediaId);
-      // apply a try/catch to this call of createTweet?
-      // creatTweet is already in a try block so if it
-      // thows an error it should be caught in the
-      // following error block
-      // if not try a try/catch here?
     } else {
       console.log('Skip tweeting -- IS_TWEETING_ENABLED:', IS_TWEETING_ENABLED);
     }
   } catch (e) {
-    await s3.moveObject(key, 'staging/', 'quarantine/');
     const { response = {} } = e;
     const { data } = response;
     console.error('Twitter error details:', data);
+    await s3.moveObject(key, 'staging/', 'quarantine/');
     throw e;
   }
 
