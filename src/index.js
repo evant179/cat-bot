@@ -41,6 +41,7 @@ const handler = async (event) => {
     const { response = {} } = e;
     const { data } = response;
     console.error('Twitter error details:', data);
+    await s3.moveObject(key, 'staging/', 'quarantine/');
     throw e;
   }
 
