@@ -15,7 +15,7 @@ const isS3PostProcessingEnabled = () => (IS_S3_POST_PROCESSING_ENABLED === 'true
 const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 const handler = async (event) => {
-  const objects = await s3.listObjects('staging/');
+  const objects = await s3.listObjects(STAGING_FOLDER);
   if (!objects.length) {
     // TODO - reset folder state:
     //   1. copy all objects from "tweeted" folder to "staging" folder
@@ -41,13 +41,13 @@ const handler = async (event) => {
     const { response = {} } = e;
     const { data } = response;
     console.error('Twitter error details:', data);
-    await s3.moveObject(key, 'staging/', 'quarantine/');
+    await s3.moveObject(key, 'test-staging/', 'test-quarantine/');
     throw e;
   }
 
   if (isS3PostProcessingEnabled()) {
     console.log('Attempt to move object to \'tweeted\' folder -- key:', key);
-    await s3.moveObject(key, 'staging/', 'tweeted/');
+    await s3.moveObject(key, 'test-staging/', 'test-tweeted/');
   } else {
     console.log(
       'Skip s3 post processing -- IS_S3_POST_PROCESSING_ENABLED:',
