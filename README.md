@@ -75,6 +75,13 @@ The [`.envrc_sample`](.envrc_sample) contains configuration values that are used
 | IS_TWEETING_ENABLED | Feature flag that can be toggled based on local development needs. Defaults to true. | No |
 | IS_S3_POST_PROCESSING_ENABLED | Feature flag that can be toggled based on local development needs. Defaults to true. | No |
 
+Including the following variables in [`.envrc_sample`](.envrc_sample) allow the live folders to remain undisturbed while local tests are being performed:
+| Variable name | Description | Default value (`index.js`) | Local value (`.envrc_sample and .envrc`) |
+| --- | --- | --- | --- |
+| STAGING_FOLDER | Bucket folder where images await to be tweeted | `staging/` | `test-staging/` |
+| TWEETED_FOLDER | Bucket folder where images have successfully tweeted | `tweeted/` | `test-tweeted/` |
+| QUARANTINE_FOLDER | Bucket folder where images have failed to tweet | `quarantine/` | `test-quarantine/` |
+
 ## High level diagram of cat-bot functionality :
 
 ![Alt text](./cat-bot.png)
