@@ -5,6 +5,9 @@ const {
   // Feature flags for local development.
   // Note: Lambdas store config values as strings, which is why
   //   booleans are not used here
+  STAGING_FOLDER = 'staging/',
+  TWEETED_FOLDER = 'tweeted/',
+  QUARANTINE_FOLDER = 'quarantine/',
   IS_TWEETING_ENABLED = 'true',
   IS_S3_POST_PROCESSING_ENABLED = 'true',
 } = process.env;
@@ -41,13 +44,13 @@ const handler = async (event) => {
     const { response = {} } = e;
     const { data } = response;
     console.error('Twitter error details:', data);
-    await s3.moveObject(key, 'test-staging/', 'test-quarantine/');
+    await s3.moveObject(key, STAGING_FOLDER, QUARANTINE_FOLDER);
     throw e;
   }
 
   if (isS3PostProcessingEnabled()) {
     console.log('Attempt to move object to \'tweeted\' folder -- key:', key);
-    await s3.moveObject(key, 'test-staging/', 'test-tweeted/');
+    await s3.moveObject(key, STAGING_FOLDER, TWEETED_FOLDER);
   } else {
     console.log(
       'Skip s3 post processing -- IS_S3_POST_PROCESSING_ENABLED:',
