@@ -2,12 +2,12 @@ const s3 = require('./s3');
 const twitter = require('./twitter');
 
 const {
-  // Feature flags for local development.
-  // Note: Lambdas store config values as strings, which is why
-  //   booleans are not used here
   STAGING_FOLDER = 'staging/',
   TWEETED_FOLDER = 'tweeted/',
   QUARANTINE_FOLDER = 'quarantine/',
+  // Feature flags for local development.
+  // Note: Lambdas store config values as strings, which is why
+  //   booleans are not used here
   IS_TWEETING_ENABLED = 'true',
   IS_S3_POST_PROCESSING_ENABLED = 'true',
 } = process.env;
