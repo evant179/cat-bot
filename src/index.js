@@ -2,6 +2,9 @@ const s3 = require('./s3');
 const twitter = require('./twitter');
 
 const {
+  STAGING_FOLDER = 'staging/',
+  TWEETED_FOLDER = 'tweeted/',
+  QUARANTINE_FOLDER = 'quarantine/',
   // Feature flags for local development.
   // Note: Lambdas store config values as strings, which is why
   //   booleans are not used here
@@ -15,7 +18,7 @@ const isS3PostProcessingEnabled = () => (IS_S3_POST_PROCESSING_ENABLED === 'true
 const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 const handler = async (event) => {
-  const objects = await s3.listObjects('staging/');
+  const objects = await s3.listObjects(STAGING_FOLDER);
   if (!objects.length) {
     // TODO - reset folder state:
     //   1. copy all objects from "tweeted" folder to "staging" folder
@@ -41,13 +44,13 @@ const handler = async (event) => {
     const { response = {} } = e;
     const { data } = response;
     console.error('Twitter error details:', data);
-    await s3.moveObject(key, 'staging/', 'quarantine/');
+    await s3.moveObject(key, STAGING_FOLDER, QUARANTINE_FOLDER);
     throw e;
   }
 
   if (isS3PostProcessingEnabled()) {
     console.log('Attempt to move object to \'tweeted\' folder -- key:', key);
-    await s3.moveObject(key, 'staging/', 'tweeted/');
+    await s3.moveObject(key, STAGING_FOLDER, TWEETED_FOLDER);
   } else {
     console.log(
       'Skip s3 post processing -- IS_S3_POST_PROCESSING_ENABLED:',
