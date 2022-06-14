@@ -71,10 +71,10 @@ const moveObject = async (key, oldPrefix, newPrefix) => {
 };
 
 const resetStaging = async (folderContentsArray) => {
-  for (const imageFile of folderContentsArray) {
+  await Promise.all(await folderContentsArray.map(async (imageFile) => {
     const key = imageFile.Key;
     await moveObject(key, TWEETED_FOLDER, STAGING_FOLDER);
-  }
+  }));
   console.log('Reset completed. Staging folder is now repopulated');
 };
 
