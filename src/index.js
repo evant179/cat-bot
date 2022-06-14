@@ -21,12 +21,12 @@ const handler = async (event) => {
   let objects = await s3.listObjects(STAGING_FOLDER);
   if (!objects.length) {
     console.log('Staging folder is empty. Will atempt to reset the folder...');
-    const tweeteObjects = await s3.listObjects(TWEETED_FOLDER);
-    await s3.resetStaging(tweeteObjects);
+    const tweetedObjects = await s3.listObjects(TWEETED_FOLDER);
+    await s3.moveObjects(tweetedObjects, TWEETED_FOLDER, STAGING_FOLDER);
     objects = await s3.listObjects(STAGING_FOLDER);
   }
 
-  const { Key: key } = await getRandomItem(objects);
+  const { Key: key } = getRandomItem(objects);
   console.log('Attempt to retrieve from s3 -- key:', key);
   const buffer = await s3.getObject(key);
   console.log('Attempt to encode image -- key:', key);

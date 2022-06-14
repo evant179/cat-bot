@@ -2,9 +2,6 @@ const AWS = require('aws-sdk');
 
 const {
   S3_BUCKET_NAME,
-  STAGING_FOLDER = 'staging/',
-  TWEETED_FOLDER = 'tweeted/',
-  QUARANTINE_FOLDER = 'quarantine/',
   // credentials for aws-sdk usage:
   //   - if running locally, these will set
   //   - otherwise, when running within lambda, these won't be set
@@ -67,13 +64,13 @@ const moveObject = async (key, oldPrefix, newPrefix) => {
     Key: key,
   };
   await s3.deleteObject(deleteParams).promise();
-  console.log(`moveObject function completed. Moved files from '${oldPrefix}' to '${newPrefix}'`);
+  console.log(`moveObject completed. Moved key '${key}' from '${oldPrefix}' to '${newPrefix}'`);
 };
 
-const resetStaging = async (folderContentsArray) => {
-  await Promise.all(await folderContentsArray.map(async (imageFile) => {
+const moveObjects = async (objects, oldPrefix, newPrefix) => {
+  await Promise.all(objects.map(async (imageFile) => {
     const key = imageFile.Key;
-    await moveObject(key, TWEETED_FOLDER, STAGING_FOLDER);
+    await moveObject(key, oldPrefix, newPrefix);
   }));
   console.log('Reset completed. Staging folder is now repopulated');
 };
@@ -82,5 +79,5 @@ module.exports = {
   getObject,
   listObjects,
   moveObject,
-  resetStaging,
+  moveObjects,
 };
