@@ -23,9 +23,9 @@ const handler = async (event) => {
     console.log('Staging folder is empty. Will atempt to reset the folder...');
     const tweeteObjects = await s3.listObjects(TWEETED_FOLDER);
     await s3.resetStaging(tweeteObjects);
-    objects = await s3.listObjects(STAGING_FOLDER);// objects remains empty after this
-  } 
-  // getRandomItem will error here if STAGING_FOLDER even after resetStaging is called
+    objects = await s3.listObjects(STAGING_FOLDER);
+  }
+
   const { Key: key } = await getRandomItem(objects);
   console.log('Attempt to retrieve from s3 -- key:', key);
   const buffer = await s3.getObject(key);

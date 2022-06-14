@@ -67,19 +67,15 @@ const moveObject = async (key, oldPrefix, newPrefix) => {
     Key: key,
   };
   await s3.deleteObject(deleteParams).promise();
-  console.log(`moveObject function completed. Moved files from '${oldPrefix}' to '${newPrefix}'`)
+  console.log(`moveObject function completed. Moved files from '${oldPrefix}' to '${newPrefix}'`);
 };
 
 const resetStaging = async (folderContentsArray) => {
-  for(let imageFile of folderContentsArray){
+  for (const imageFile of folderContentsArray) {
     const key = imageFile.Key;
     await moveObject(key, TWEETED_FOLDER, STAGING_FOLDER);
-  };
-  // await folderContentsArray.forEach(async (imageFile) => {
-  //   const key = imageFile.Key;
-  //   await moveObject(key, TWEETED_FOLDER, STAGING_FOLDER);
-  // });
-  console.log('Reset completed')
+  }
+  console.log('Reset completed. Staging folder is now repopulated');
 };
 
 module.exports = {
