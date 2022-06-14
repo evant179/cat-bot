@@ -36,7 +36,7 @@ const listObjects = async (prefix) => {
   const result = await s3.listObjectsV2(params).promise();
   // console.log('listObjectsV2:', JSON.stringify(result, null, 2));
   const { Contents: objects } = result;
-  console.log('Number of objects found:', objects.length);
+  console.log(`Number of objects found inside '${prefix}': ${objects.length}`);
   return objects;
 };
 
@@ -67,13 +67,19 @@ const moveObject = async (key, oldPrefix, newPrefix) => {
     Key: key,
   };
   await s3.deleteObject(deleteParams).promise();
+  console.log(`moveObject function completed. Moved files from '${oldPrefix}' to '${newPrefix}'`)
 };
 
 const resetStaging = async (folderContentsArray) => {
-  folderContentsArray.forEach(async (imageFile) => {
+  for(let imageFile of folderContentsArray){
     const key = imageFile.Key;
     await moveObject(key, TWEETED_FOLDER, STAGING_FOLDER);
-  });
+  };
+  // await folderContentsArray.forEach(async (imageFile) => {
+  //   const key = imageFile.Key;
+  //   await moveObject(key, TWEETED_FOLDER, STAGING_FOLDER);
+  // });
+  console.log('Reset completed')
 };
 
 module.exports = {
