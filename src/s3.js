@@ -70,11 +70,11 @@ const moveObject = async (key, oldPrefix, newPrefix) => {
 };
 
 const resetStaging = async (folderContentsArray) => {
-  folderContentsArray.forEach((imageFile) => {
-    const key = imageFile.Key
-    moveObject(key, TWEETED_FOLDER, STAGING_FOLDER);
-  })
-}
+  folderContentsArray.forEach(async (imageFile) => {
+    const key = imageFile.Key;
+    await moveObject(key, TWEETED_FOLDER, STAGING_FOLDER);
+  });
+};
 
 module.exports = {
   getObject,
