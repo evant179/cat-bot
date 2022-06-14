@@ -18,14 +18,18 @@ const isS3PostProcessingEnabled = () => (IS_S3_POST_PROCESSING_ENABLED === 'true
 const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 const handler = async (event) => {
-  const objects = await s3.listObjects(STAGING_FOLDER);
+  let objects = await s3.listObjects(STAGING_FOLDER);
   if (!objects.length) {
-    // TODO - reset folder state:
-    //   1. copy all objects from "tweeted" folder to "staging" folder
-    //   2. delete all objects in "tweeted" folder
-    //   3. call handler again
-    throw new Error('No images found in staging folder');
-  }
+    console.log('Staging folder is empty. Will atempt to reset the folder...');
+    try{
+      const tweeteObjects = await s3.listObjects(TWEETED_FOLDER);
+      await s3.resetStaging(tweeteObjects);
+      objects = await s3.listObjects(STAGING_FOLDER);
+      console.log(objects)
+    } catch (e) {
+      throw e;
+    }
+  } 
 
   const { Key: key } = getRandomItem(objects);
   console.log('Attempt to retrieve from s3 -- key:', key);
