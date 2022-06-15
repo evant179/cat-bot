@@ -20,11 +20,10 @@ const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const handler = async (event) => {
   const objects = await s3.listObjects(STAGING_FOLDER);
   if (!objects.length) {
-    // TODO - reset folder state:
-    //   1. copy all objects from "tweeted" folder to "staging" folder
-    //   2. delete all objects in "tweeted" folder
-    //   3. call handler again
-    throw new Error('No images found in staging folder');
+    console.log('Staging folder is empty. Will atempt to reset the folder...');
+    const tweetedObjects = await s3.listObjects(TWEETED_FOLDER);
+    await s3.moveObjects(tweetedObjects, TWEETED_FOLDER, STAGING_FOLDER);
+    throw new Error(`Successfully repopulated ${STAGING_FOLDER} folder with ${TWEETED_FOLDER} contents. Proceed to rerun Lambda.`);
   }
 
   const { Key: key } = getRandomItem(objects);
