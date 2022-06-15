@@ -69,7 +69,7 @@ const moveObject = async (key, oldPrefix, newPrefix) => {
 
 const moveObjects = async (objects, oldPrefix, newPrefix) => {
   await Promise.all(objects.map(async (imageFile) => {
-    const key = imageFile.Key;
+    const { Key: key } = imageFile;
     await moveObject(key, oldPrefix, newPrefix);
   }));
   console.log('Reset completed. Staging folder is now repopulated');

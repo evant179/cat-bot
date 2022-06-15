@@ -18,12 +18,11 @@ const isS3PostProcessingEnabled = () => (IS_S3_POST_PROCESSING_ENABLED === 'true
 const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 const handler = async (event) => {
-  let objects = await s3.listObjects(STAGING_FOLDER);
+  const objects = await s3.listObjects(STAGING_FOLDER);
   if (!objects.length) {
     console.log('Staging folder is empty. Will atempt to reset the folder...');
     const tweetedObjects = await s3.listObjects(TWEETED_FOLDER);
     await s3.moveObjects(tweetedObjects, TWEETED_FOLDER, STAGING_FOLDER);
-    objects = await s3.listObjects(STAGING_FOLDER);
     throw new Error(`Successfully repopulated ${STAGING_FOLDER} folder with ${TWEETED_FOLDER} contents. Proceed to rerun Lambda.`);
   }
 
