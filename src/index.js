@@ -24,6 +24,7 @@ const handler = async (event) => {
     const tweetedObjects = await s3.listObjects(TWEETED_FOLDER);
     await s3.moveObjects(tweetedObjects, TWEETED_FOLDER, STAGING_FOLDER);
     objects = await s3.listObjects(STAGING_FOLDER);
+    throw new Error(`Successfully repopulated ${STAGING_FOLDER} folder with ${TWEETED_FOLDER} contents. Proceed to rerun Lambda.`);
   }
 
   const { Key: key } = getRandomItem(objects);
