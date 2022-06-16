@@ -8,12 +8,10 @@ export TWITTER_CLIENT_SECRET=add_me
 export LOCAL_AWS_ACCESS_KEY_ID=add_me
 export LOCAL_AWS_SECRET_ACCESS_KEY=add_me
 export S3_BUCKET_NAME=add_me
+export STAGING_FOLDER=test-staging/
+export TWEETED_FOLDER=test-tweeted/
+export QUARANTINE_FOLDER=test-quarantine/
 
 # Local development flags
 export IS_TWEETING_ENABLED=true
 export IS_S3_POST_PROCESSING_ENABLED=true
-
-# s3 bucket folders configs
-export STAGING_FOLDER=test-staging/
-export TWEETED_FOLDER=test-tweeted/
-export QUARANTINE_FOLDER=test-quarantine/
