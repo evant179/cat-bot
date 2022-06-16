@@ -3,7 +3,7 @@ const AWS = require('aws-sdk');
 const {
   S3_BUCKET_NAME,
   // credentials for aws-sdk usage:
-  //   - if running locally, these will set
+  //   - if running locally, these will be set
   //   - otherwise, when running within lambda, these won't be set
   //       and permission is gained from its IAM role
   LOCAL_AWS_ACCESS_KEY_ID,
@@ -18,6 +18,9 @@ const createS3Client = () => {
 
   return new AWS.S3({
     ...awsCredentials,
+    maxRetries: 5,
+    // delays (ms): 300, 600, 1200, ...
+    retryDelayOptions: { base: 300 },
   });
 };
 
@@ -31,7 +34,6 @@ const listObjects = async (prefix) => {
     StartAfter: prefix,
   };
   const result = await s3.listObjectsV2(params).promise();
-  // console.log('listObjectsV2:', JSON.stringify(result, null, 2));
   const { Contents: objects } = result;
   console.log(`Number of objects found inside '${prefix}': ${objects.length}`);
   return objects;
@@ -48,6 +50,7 @@ const getObject = async (key) => {
 };
 
 const moveObject = async (key, oldPrefix, newPrefix) => {
+  console.log(`Attempt to moveObject -- key '${key}' from '${oldPrefix}' to '${newPrefix}'`);
   // s3 does not offer a 'move', instead, perform a 'copy' then 'delete'
   const s3 = createS3Client();
 
@@ -72,7 +75,7 @@ const moveObjects = async (objects, oldPrefix, newPrefix) => {
     const { Key: key } = imageFile;
     await moveObject(key, oldPrefix, newPrefix);
   }));
-  console.log('Reset completed. Staging folder is now repopulated');
+  console.log(`Reset completed. ${newPrefix} folder is now repopulated`);
 };
 
 module.exports = {
