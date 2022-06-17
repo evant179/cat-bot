@@ -106,3 +106,6 @@ dist
 # custom
 .envrc
 .envrc_tmp
+
+# uploads folder
+uploads/
