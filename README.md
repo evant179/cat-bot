@@ -61,10 +61,11 @@ npm run lint
 
 ## Uploading pictures from local uploads/ folder to s3 bucket
 
-First create a folder `/uploads/` in your cat-bot directory. Fill this folder with pictures of cats.  Then run the following comand:
+Create a folder `/uploads/` in the first level of your cat-bot directory. Fill this folder with pictures of cats.  Then run the following comand:
 ```
 npm run full-send
 ```
+Your cat pictures have meow been uploaded to the cat-bot s3 bucket!
 
 ## Configuration
 
