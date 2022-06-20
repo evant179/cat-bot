@@ -9,6 +9,7 @@ const {
   //       and permission is gained from its IAM role
   LOCAL_AWS_ACCESS_KEY_ID,
   LOCAL_AWS_SECRET_ACCESS_KEY,
+  STAGING_FOLDER
 } = process.env;
 
 const createS3Client = () => {
@@ -86,7 +87,7 @@ const uploadFile = (fileName) => {
 
   // Setting up S3 upload parameters
   const params = {
-      Bucket: S3_BUCKET_NAME, //this needs to point to uploads folder
+      Bucket: S3_BUCKET_NAME + '/' + STAGING_FOLDER,//S3_BUCKET_NAME, //this needs to point to uploads folder
       Key: fileName, // File name you want to save as in S3
       Body: fileContent
   };
