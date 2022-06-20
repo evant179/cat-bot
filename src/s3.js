@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const fs = require('fs');
 
 const {
   S3_BUCKET_NAME,
@@ -78,9 +79,32 @@ const moveObjects = async (objects, oldPrefix, newPrefix) => {
   console.log(`Reset completed. ${newPrefix} folder is now repopulated`);
 };
 
+const uploadFile = (fileName) => {
+  const s3 = createS3Client();
+  // Read content from the file
+  const fileContent = fs.readFileSync(fileName);
+
+  // Setting up S3 upload parameters
+  const params = {
+      Bucket: S3_BUCKET_NAME, //this needs to point to uploads folder
+      Key: fileName, // File name you want to save as in S3
+      Body: fileContent
+  };
+
+  // Uploading files to the bucket
+  s3.upload(params, function(err, data) {
+      if (err) {
+          throw `Could not upload to s3 bucket. Error: ${err}`;
+      }
+      console.log(`File uploaded successfully. ${data.Location}`);
+  });
+};
+
+
 module.exports = {
   getObject,
   listObjects,
   moveObject,
   moveObjects,
+  uploadFile,
 };
