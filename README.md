@@ -59,7 +59,7 @@ Running the linter:
 npm run lint
 ```
 
-## Uploading pictures from local uploads/ folder to s3 bucket
+## Uploading pictures from local /uploads/ folder to s3 bucket
 
 Create a folder `/uploads/` in the first level of your cat-bot directory. Fill this folder with pictures of cats.  Then run the following comand:
 ```
