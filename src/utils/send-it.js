@@ -1,9 +1,10 @@
-// access AWS console
-// navigate to S3 bucket
-// select images to upload
-// confirm images to upload
 const fs = require('fs');
 const s3 = require('../s3');
+
+const {
+    STAGING_FOLDER,
+    S3_BUCKET_NAME
+  } = process.env;
 
 const uploadsFolder = 'uploads/';
 
@@ -14,11 +15,11 @@ fs.readdir(uploadsFolder, (err, files) => {
     } 
     //listing all files using forEach
     files.forEach( file => {
-        // Do whatever you want to do with the file
-        console.log(`Uploading file: ${file}`);
-        s3.uploadFile('./uploads/' + file);
+        const targetDestination = S3_BUCKET_NAME + '/' + STAGING_FOLDER;
+        const localFile = './uploads/' + file;
+        console.log(`Uploading file: ${file}...`);
+        s3.uploadFile(localFile, targetDestination);
     });
-    console.log('Done') // npm run full-send
 });
 
 // s3.uploadFile('./uploads/kirb (copy 1).jpeg') this works

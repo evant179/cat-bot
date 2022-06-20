@@ -8,8 +8,7 @@ const {
   //   - otherwise, when running within lambda, these won't be set
   //       and permission is gained from its IAM role
   LOCAL_AWS_ACCESS_KEY_ID,
-  LOCAL_AWS_SECRET_ACCESS_KEY,
-  STAGING_FOLDER
+  LOCAL_AWS_SECRET_ACCESS_KEY
 } = process.env;
 
 const createS3Client = () => {
@@ -80,14 +79,14 @@ const moveObjects = async (objects, oldPrefix, newPrefix) => {
   console.log(`Reset completed. ${newPrefix} folder is now repopulated`);
 };
 
-const uploadFile = (fileName) => {
+const uploadFile = (fileName, targetFolder) => {
   const s3 = createS3Client();
   // Read content from the file
   const fileContent = fs.readFileSync(fileName);
 
   // Setting up S3 upload parameters
   const params = {
-      Bucket: S3_BUCKET_NAME + '/' + STAGING_FOLDER,//S3_BUCKET_NAME, //this needs to point to uploads folder
+      Bucket: targetFolder,//S3_BUCKET_NAME, //this needs to point to uploads folder
       Key: fileName, // File name you want to save as in S3
       Body: fileContent
   };
