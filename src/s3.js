@@ -8,7 +8,7 @@ const {
   //   - otherwise, when running within lambda, these won't be set
   //       and permission is gained from its IAM role
   LOCAL_AWS_ACCESS_KEY_ID,
-  LOCAL_AWS_SECRET_ACCESS_KEY
+  LOCAL_AWS_SECRET_ACCESS_KEY,
 } = process.env;
 
 const createS3Client = () => {
@@ -86,20 +86,20 @@ const uploadFile = (fileName, targetFolder) => {
 
   // Setting up S3 upload parameters
   const params = {
-      Bucket: targetFolder,//S3_BUCKET_NAME, //this needs to point to uploads folder
-      Key: fileName, // File name you want to save as in S3
-      Body: fileContent
+    Bucket: targetFolder,
+    Key: fileName,
+    Body: fileContent,
   };
 
   // Uploading files to the bucket
-  s3.upload(params, function(err, data) {
-      if (err) {
-          throw `Could not upload to s3 bucket. Error: ${err}`;
-      }
-      console.log(`File uploaded successfully. ${data.Location}`);
+  s3.upload(params, (err, data) => {
+    if (err) {
+      console.log('Could not upload to s3 bucket. Error:');
+      throw err;
+    }
+    console.log(`File uploaded successfully. ${data.Location}`);
   });
 };
-
 
 module.exports = {
   getObject,

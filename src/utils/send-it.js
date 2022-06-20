@@ -2,27 +2,25 @@ const fs = require('fs');
 const s3 = require('../s3');
 
 const {
-    STAGING_FOLDER,
-    S3_BUCKET_NAME
-  } = process.env;
+  STAGING_FOLDER = 'staging/', // comment this value out to set staging folder to test-staging folder
+  S3_BUCKET_NAME,
+} = process.env;
 
 const uploadsFolder = 'uploads/';
 
 fs.readdir(uploadsFolder, (err, files) => {
-    //handling error
-    if (err) {
-        return console.log('Unable to scan directory: ' + err);
-    } 
-    //listing all files using forEach
-    files.forEach( file => {
-        const targetDestination = S3_BUCKET_NAME + '/' + STAGING_FOLDER;
-        const localFile = './uploads/' + file;
-        console.log(`Uploading file: ${file}...`);
-        s3.uploadFile(localFile, targetDestination);
-    });
+  if (err) {
+    console.log('Unable to scan directory: ');
+    throw err;
+  }
+  files.forEach((file) => {
+    const targetDestination = `${S3_BUCKET_NAME}/${STAGING_FOLDER}`;
+    const localFile = `./uploads/${file}`;
+    console.log(`Found file: ${file}...`);
+    s3.uploadFile(localFile, targetDestination);
+  });
+  console.log('Uploading files to s3 bucket...');
 });
-
-// s3.uploadFile('./uploads/kirb (copy 1).jpeg') this works
 
 // resources:
 // https://stackabuse.com/uploading-files-to-aws-s3-with-node-js/
