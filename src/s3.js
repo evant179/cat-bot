@@ -79,26 +79,26 @@ const moveObjects = async (objects, oldPrefix, newPrefix) => {
   console.log(`Reset completed. ${newPrefix} folder is now repopulated`);
 };
 
-const uploadFile = (fileName, targetFolder) => {
+const uploadObject = async (fileName, file) => {
   const s3 = createS3Client();
   // Read content from the file
-  const fileContent = fs.readFileSync(fileName);
+  const fileContent = fs.readFileSync(file);
 
   // Setting up S3 upload parameters
   const params = {
-    Bucket: targetFolder,
+    Bucket: `${S3_BUCKET_NAME}/test-staging`,
     Key: fileName,
     Body: fileContent,
   };
 
   // Uploading files to the bucket
-  s3.upload(params, (err, data) => {
-    if (err) {
-      console.log('Could not upload to s3 bucket. Error:');
-      throw err;
-    }
+  try {
+    const data = await s3.upload(params).promise();
     console.log(`File uploaded successfully. ${data.Location}`);
-  });
+  } catch (err) {
+    console.log('Could not upload to s3 bucket. Error:', err);
+    throw err;
+  }
 };
 
 module.exports = {
@@ -106,5 +106,5 @@ module.exports = {
   listObjects,
   moveObject,
   moveObjects,
-  uploadFile,
+  uploadObject,
 };

@@ -2,7 +2,7 @@ const fs = require('fs');
 const s3 = require('../s3');
 
 const {
-  STAGING_FOLDER = 'staging/', // comment this value out to set staging folder to test-staging folder
+  STAGING_FOLDER,
   S3_BUCKET_NAME,
 } = process.env;
 
@@ -13,11 +13,11 @@ fs.readdir(uploadsFolder, (err, files) => {
     console.log('Unable to scan directory: ');
     throw err;
   }
-  files.forEach((file) => {
-    const targetDestination = `${S3_BUCKET_NAME}/${STAGING_FOLDER}`;
-    const localFile = `./uploads/${file}`;
-    console.log(`Found file: ${file}...`);
-    s3.uploadFile(localFile, targetDestination);
+  files.forEach((fileName) => {
+    // const targetDestination = `${S3_BUCKET_NAME}/${STAGING_FOLDER}`;
+    const localFileSource = `${uploadsFolder}${fileName}`;
+    console.log(`Found file: ${fileName}...`);
+    s3.uploadObject(fileName, localFileSource);
   });
   console.log('Uploading files to s3 bucket...');
 });
