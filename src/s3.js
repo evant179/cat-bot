@@ -96,7 +96,20 @@ const uploadObject = async (fileName, file) => {
     const data = await s3.upload(params).promise();
     console.log(`File uploaded successfully: ${data.Location}`);
   } catch (err) {
-    console.log('Could not upload to s3 bucket. Error:', err);
+    console.log(`Could not upload ${fileName} to s3 bucket. Error:`, err);
+    throw err;
+  }
+};
+
+const uploadFolderContents = async (folderContents, folder) => {
+  try {
+    await Promise.all(folderContents.map(async (file) => {
+      const localFileSource = `${folder}${file}`;
+      console.log(`Found file: ${file}...`);
+      await uploadObject(file, localFileSource);
+    }));
+  } catch (err) {
+    console.log(`Failed to upload all contents of ${folder}`, err);
     throw err;
   }
 };
@@ -107,4 +120,5 @@ module.exports = {
   moveObject,
   moveObjects,
   uploadObject,
+  uploadFolderContents,
 };
