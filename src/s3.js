@@ -101,15 +101,15 @@ const uploadObject = async (fileName, file) => {
   }
 };
 
-const uploadFolderContents = async (folderContents, folder) => {
+const uploadFolderContents = async (folderContents, sourceFolder) => {
   try {
     await Promise.all(folderContents.map(async (file) => {
-      const localFileSource = `${folder}${file}`;
+      const localFileSource = `${sourceFolder}${file}`;
       console.log(`Found file: ${file}...`);
       await uploadObject(file, localFileSource);
     }));
   } catch (err) {
-    console.log(`Failed to upload all contents of ${folder}`, err);
+    console.log(`Failed to upload all contents of ${sourceFolder}`, err);
     throw err;
   }
 };
