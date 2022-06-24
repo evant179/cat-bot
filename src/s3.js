@@ -79,15 +79,15 @@ const moveObjects = async (objects, oldPrefix, newPrefix) => {
   console.log(`Reset completed. ${newPrefix} folder is now repopulated`);
 };
 
-const uploadObject = async (fileName, file) => {
+const uploadObject = async (fileName, filePath, targetFolder) => {
   const s3 = createS3Client();
   // Read content from the file
-  const fileContent = fs.readFileSync(file);
+  const fileContent = fs.readFileSync(filePath);
 
   // Setting up S3 upload parameters
   const params = {
-    Bucket: `${S3_BUCKET_NAME}/test-staging`,
-    Key: fileName,
+    Bucket: S3_BUCKET_NAME,
+    Key: `${targetFolder}${fileName}`,
     Body: fileContent,
   };
 
