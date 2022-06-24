@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const fs = require('fs');
 
 const {
   S3_BUCKET_NAME,
@@ -78,9 +79,46 @@ const moveObjects = async (objects, oldPrefix, newPrefix) => {
   console.log(`Reset completed. ${newPrefix} folder is now repopulated`);
 };
 
+const uploadObject = async (fileName, filePath, targetFolder) => {
+  const s3 = createS3Client();
+  // Read content from the file
+  const fileContent = fs.readFileSync(filePath);
+
+  // Setting up S3 upload parameters
+  const params = {
+    Bucket: S3_BUCKET_NAME,
+    Key: `${targetFolder}${fileName}`,
+    Body: fileContent,
+  };
+
+  // Uploading files to the bucket
+  try {
+    const data = await s3.upload(params).promise();
+    console.log(`File uploaded successfully: ${data.Location}`);
+  } catch (err) {
+    console.log(`Could not upload ${fileName} to s3 bucket. Error:`, err);
+    throw err;
+  }
+};
+
+const uploadFolderContents = async (folderContents, sourceFolder, targetFolder) => {
+  try {
+    await Promise.all(folderContents.map(async (file) => {
+      const localFileSource = `${sourceFolder}${file}`;
+      console.log(`Found file: ${file}...`);
+      await uploadObject(file, localFileSource, targetFolder);
+    }));
+  } catch (err) {
+    console.log(`Failed to upload all contents of ${sourceFolder}`, err);
+    throw err;
+  }
+};
+
 module.exports = {
   getObject,
   listObjects,
   moveObject,
   moveObjects,
+  uploadObject,
+  uploadFolderContents,
 };

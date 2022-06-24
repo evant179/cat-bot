@@ -59,6 +59,14 @@ Running the linter:
 npm run lint
 ```
 
+## Uploading pictures from local /uploads/ folder to s3 bucket
+
+Create a folder `/uploads/` in the first level of your cat-bot directory. Fill this folder with pictures of cats.  Then run the following comand:
+```
+npm run full-send
+```
+Your cat pictures have meow been uploaded to the cat-bot s3 bucket!
+
 ## Configuration
 
 The [`.envrc_sample`](.envrc_sample) contains configuration values that are used by the lambda and for local development convenience.
