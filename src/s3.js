@@ -80,6 +80,9 @@ const moveObjects = async (objects, oldPrefix, newPrefix) => {
 };
 
 const uploadObject = async (fileName, filePath, targetFolder) => {
+  if (!targetFolder) {
+    throw new Error(`Invalid targetFolder value: ${targetFolder}`);
+  }
   const s3 = createS3Client();
   // Read content from the file
   const fileContent = fs.readFileSync(filePath);
