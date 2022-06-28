@@ -104,7 +104,7 @@ const uploadObject = async (fileName, filePath, targetFolder) => {
   }
 };
 
-const uploadFolderContents = async (folderContents, sourceFolder, targetFolder) => {
+const uploadFolderContents = async (folderContents, sourceFolder, targetFolder = 'test-staging/') => {
   try {
     await Promise.all(folderContents.map(async (file) => {
       const localFileSource = `${sourceFolder}${file}`;
