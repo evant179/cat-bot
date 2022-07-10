@@ -8,14 +8,29 @@ const folderContents = fs.readdirSync(uploadsFolder);
 const targetFolder = process.argv.slice(2)[0];
 const rl = readline.createInterface(process.stdin, process.stdout);
 
-if (targetFolder === '') {
-  rl.question('Upload to the test-staging/ folder?');
-  s3.uploadFolderContents(folderContents, uploadsFolder, targetFolder);
+if (!targetFolder) {
+  rl.question('Upload to the test-staging/ folder? [Y to confirm]\n', (userAnswer) => {
+    if (userAnswer.toLowerCase().trim() === 'y') {
+      s3.uploadFolderContents(folderContents, uploadsFolder, targetFolder);
+      rl.close();
+    } else {
+      console.log('\nUpload cancelled\nTo upload to the live staging/ folder, type "npm run full-send staging/"');
+      rl.close();
+    }
+  });
 } else if (targetFolder === 'staging/') {
-  rl.question('WARNING: Uploading to the live staging/ folder.\nConfirm? [Y/n]');
-  s3.uploadFolderContents(folderContents, uploadsFolder, targetFolder);
+  rl.question('WARNING: Uploading to the live staging/ folder.\n[Y to confirm]\n', (userAnswer) => {
+    if (userAnswer.toLowerCase().trim() === 'y') {
+      s3.uploadFolderContents(folderContents, uploadsFolder, targetFolder);
+      rl.close();
+    } else {
+      console.log('\nUpload cancelled');
+      rl.close();
+    }
+  });
 } else {
-  console.log(`Folder:${targetFolder} does not exist`);
+  console.log(`\nFolder:${targetFolder} does not exist`);
+  rl.close();
 }
 
 // resources:
