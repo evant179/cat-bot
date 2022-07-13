@@ -54,6 +54,20 @@ const listObjects = async (prefix) => {
   return objects;
 };
 
+const listRawFileNames = async (folders) => {
+  const results = await Promise.all(
+    folders.map((folder) => listObjects(folder)),
+  );
+
+  const rawFileNames = results.flat().map((object) => {
+    const { Key: key } = object;
+    return key.split('/').pop();
+  });
+
+  console.log(`Total number of files found across folders [${folders}]: ${rawFileNames.length}`);
+  return rawFileNames;
+};
+
 const getObject = async (key) => {
   const s3 = createS3Client();
   const params = {
@@ -134,6 +148,7 @@ const uploadFolderContents = async (folderContents, sourceFolder, targetFolder) 
 module.exports = {
   getObject,
   listObjects,
+  listRawFileNames,
   moveObject,
   moveObjects,
   uploadObject,
