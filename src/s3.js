@@ -35,7 +35,21 @@ const listObjects = async (prefix) => {
     StartAfter: prefix,
   };
   const result = await s3.listObjectsV2(params).promise();
-  const { Contents: objects } = result;
+
+  let {
+    Contents: objects,
+    NextContinuationToken: nextToken,
+  } = result;
+  while (nextToken) {
+    /* eslint-disable no-await-in-loop */
+    const nextResult = await s3.listObjectsV2({
+      ...params,
+      ContinuationToken: nextToken,
+    }).promise();
+    objects = objects.concat(nextResult.Contents);
+    nextToken = nextResult.NextContinuationToken;
+  }
+
   console.log(`Number of objects found inside '${prefix}': ${objects.length}`);
   return objects;
 };
