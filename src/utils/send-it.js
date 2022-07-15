@@ -9,6 +9,14 @@ const folderContents = fs.readdirSync(uploadsFolder);
 let targetFolder = process.argv.slice(2)[0];
 const rl = readline.createInterface({ input, output });
 
+// TRY USING READLINEPROMISES
+// https://nodejs.org/api/readline.html#readline
+// const readlinePromises = require('node:readline/promises');
+// const rl = readlinePromises.createInterface({
+//   input: process.stdin,
+//   output: process.stdout
+// });
+
 if (!targetFolder) {
   targetFolder = 'test-staging/';
 }
