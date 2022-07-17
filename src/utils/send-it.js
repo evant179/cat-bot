@@ -1,44 +1,48 @@
 const fs = require('fs');
-const readline = require('readline');
-const { stdin: input, stdout: output } = require('node:process');
+const inquirer = require('inquirer');
 const s3 = require('../s3');
 
 // const arg = process.argv.slice(2)[0];
 const uploadsFolder = 'uploads/';
 const folderContents = fs.readdirSync(uploadsFolder);
 let targetFolder = process.argv.slice(2)[0];
-const rl = readline.createInterface({ input, output });
+// const prompt = inquirer.createPromptModule();
 
-// TRY USING READLINEPROMISES
-// https://nodejs.org/api/readline.html#readline
-// const readlinePromises = require('node:readline/promises');
-// const rl = readlinePromises.createInterface({
-//   input: process.stdin,
-//   output: process.stdout
-// });
+const questions = [{
+  type: 'list',
+  name: 'folderDestination',
+  message: 'Where would you like to upload your files to?\n',
+  choices: ['staging/', 'test-staging/'],
+  // filter(val) {
+  //   return val.toLowerCase();
+  // },
+  // validate(value) {
+  //   if (value === 'staging/' || value === 'test-staging/') {
+  //     return true;
+  //   }
+  //   return false && 'Not an available upload desitnation';
+  // },
+}];
 
 if (!targetFolder) {
-  targetFolder = 'test-staging/';
-}
-
-const ask = () => new Promise((resolve) => {
-  rl.question(`Are you sure you want to upload to Folder:'${targetFolder}'? [Y to confirm]\n`, (userInput) => resolve(userInput));
-});
-
-if (targetFolder === 'test-staging/' || targetFolder === 'staging/') {
-  ask()
-    .then((result) => {
-      if (result.toLowerCase().trim() === 'y') {
-        s3.uploadFolderContents(folderContents, uploadsFolder, targetFolder);
-        rl.close();
+  inquirer
+    .prompt(questions)
+    // .then((userAnswer) => (console.log(userAnswer.folderDestination)))
+    .then((userAnswer) => {
+      targetFolder = userAnswer.folderDestination;
+      s3.uploadFolderContents(folderContents, uploadsFolder, targetFolder);
+    })
+    .catch((error) => {
+      if (error.isTtyError) {
+        // Prompt couldn't be rendered in the current environment
       } else {
-        console.log('\nUpload cancelled\nTo upload to the live staging/ folder, type "npm run full-send staging/"');
-        rl.close();
+        // Something else went wrong
       }
     });
+} else if (targetFolder === 'test-staging/' || targetFolder === 'staging/') {
+  s3.uploadFolderContents(folderContents, uploadsFolder, targetFolder);
 } else {
   console.log(`\nFolder:${targetFolder} does not exist`);
-  rl.close();
 }
 
 // resources:

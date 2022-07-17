@@ -28,6 +28,7 @@
   "dependencies": {
     "aws-sdk": "^2.1148.0",
     "axios": "^0.27.2",
+    "inquirer": "^8.2.4",
     "oauth-1.0a": "^2.2.6"
   }
 }
