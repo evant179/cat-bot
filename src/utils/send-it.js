@@ -12,7 +12,7 @@ const questions = [{
   type: 'list',
   name: 'folderDestination',
   message: 'Where would you like to upload your files to?\n',
-  choices: ['staging/', 'test-staging/'],
+  choices: ['test-staging/', 'staging/'],
   // filter(val) {
   //   return val.toLowerCase();
   // },
