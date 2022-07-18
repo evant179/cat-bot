@@ -61,6 +61,7 @@ const listRawFileNames = async (folders) => {
 
   const rawFileNames = results.flat().map((object) => {
     const { Key: key } = object;
+    // Get only the filename without the path. For example, given "/path/xyz.jpg", get "xyz.jpg"
     return key.split('/').pop();
   });
 
