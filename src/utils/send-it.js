@@ -43,13 +43,13 @@ const main = async () => {
   console.log(`Total number of files found from local folder [${uploadsFolder}]: ${localRawFileNames.length}`);
 
   if (!targetFolder) {
-    inquirer
+    await inquirer
       .prompt(questions)
       .then((userAnswer) => {
         targetFolder = userAnswer.folderDestination;
-        if (userAnswer === 'test-staging/') {
+        if (targetFolder === 'test-staging/') {
           uploadUniqueFilesToS3(testBucketFolders, localRawFileNames);
-        } else if (userAnswer === 'staging/') {
+        } else if (targetFolder === 'staging/') {
           uploadUniqueFilesToS3(liveBucketFolders, localRawFileNames);
         }
       })
