@@ -35,9 +35,38 @@ const listObjects = async (prefix) => {
     StartAfter: prefix,
   };
   const result = await s3.listObjectsV2(params).promise();
-  const { Contents: objects } = result;
+
+  let {
+    Contents: objects,
+    NextContinuationToken: nextToken,
+  } = result;
+  while (nextToken) {
+    /* eslint-disable no-await-in-loop */
+    const nextResult = await s3.listObjectsV2({
+      ...params,
+      ContinuationToken: nextToken,
+    }).promise();
+    objects = objects.concat(nextResult.Contents);
+    nextToken = nextResult.NextContinuationToken;
+  }
+
   console.log(`Number of objects found inside '${prefix}': ${objects.length}`);
   return objects;
+};
+
+const listRawFileNames = async (folders) => {
+  const results = await Promise.all(
+    folders.map((folder) => listObjects(folder)),
+  );
+
+  const rawFileNames = results.flat().map((object) => {
+    const { Key: key } = object;
+    // Get only the filename without the path. For example, given "/path/xyz.jpg", get "xyz.jpg"
+    return key.split('/').pop();
+  });
+
+  console.log(`Total number of files found across folders [${folders}]: ${rawFileNames.length}`);
+  return rawFileNames;
 };
 
 const getObject = async (key) => {
@@ -120,6 +149,7 @@ const uploadFolderContents = async (folderContents, sourceFolder, targetFolder =
 module.exports = {
   getObject,
   listObjects,
+  listRawFileNames,
   moveObject,
   moveObjects,
   uploadObject,
