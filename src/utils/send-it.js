@@ -12,6 +12,18 @@ const questions = [{
   choices: ['test-staging/', 'staging/'],
 }];
 
+const testBucketFolders = [
+  'test-staging/',
+  'test-tweeted/',
+  'test-quarantine/',
+];
+
+const liveBucketFolders = [
+  'staging/',
+  'tweeted/',
+  'quarantine/',
+];
+
 const deduplicate = (localRawFileNames, existingRawFileNames) => {
   const uniqueRawFileNames = localRawFileNames
     .filter((fileName) => !existingRawFileNames.includes(fileName));
@@ -20,44 +32,25 @@ const deduplicate = (localRawFileNames, existingRawFileNames) => {
   return uniqueRawFileNames;
 };
 
+const uploadUniqueFilesToS3 = async (bucketFolder, localRawFileNames) => {
+  const existingRawFileNames = await s3.listRawFileNames(bucketFolder);
+  const uniqueLocalRawFileNames = deduplicate(localRawFileNames, existingRawFileNames);
+  s3.uploadFolderContents(uniqueLocalRawFileNames, uploadsFolder, targetFolder);
+};
+
 const main = async () => {
   const localRawFileNames = fs.readdirSync(uploadsFolder);
   console.log(`Total number of files found from local folder [${uploadsFolder}]: ${localRawFileNames.length}`);
 
-  // TODO - Simply grabbing both the live and test folders for now.
-  // There is a WIP feature that will change this to be driven by user input.
-  // const existingRawFileNames = await s3.listRawFileNames([
-  //   'staging/',
-  //   'tweeted/',
-  //   'quarantine/',
-  //   'test-staging/',
-  //   'test-tweeted/',
-  //   'test-quarantine/',
-  // ]);
-
-  // await s3.uploadFolderContents(uniqueLocalRawFileNames, uploadsFolder, targetFolder);
   if (!targetFolder) {
     inquirer
       .prompt(questions)
       .then((userAnswer) => {
+        targetFolder = userAnswer.folderDestination;
         if (userAnswer === 'test-staging/') {
-          const existingRawFileNames = s3.listRawFileNames([
-            'test-staging/',
-            'test-tweeted/',
-            'test-quarantine/',
-          ]);
-          const uniqueLocalRawFileNames = deduplicate(localRawFileNames, existingRawFileNames);
-          targetFolder = userAnswer.folderDestination;
-          s3.uploadFolderContents(uniqueLocalRawFileNames, uploadsFolder, targetFolder);
+          uploadUniqueFilesToS3(testBucketFolders, localRawFileNames);
         } else if (userAnswer === 'staging/') {
-          const existingRawFileNames = s3.listRawFileNames([
-            'staging/',
-            'tweeted/',
-            'quarantine/',
-          ]);
-          const uniqueLocalRawFileNames = deduplicate(localRawFileNames, existingRawFileNames);
-          targetFolder = userAnswer.folderDestination;
-          s3.uploadFolderContents(uniqueLocalRawFileNames, uploadsFolder, targetFolder);
+          uploadUniqueFilesToS3(liveBucketFolders, localRawFileNames);
         }
       })
       .catch((error) => {
@@ -68,9 +61,10 @@ const main = async () => {
           console.log(error);
         }
       });
-  } else if (targetFolder === 'test-staging/' || targetFolder === 'staging/') {
-    // s3.uploadFolderContents(uniqueLocalRawFileNames, uploadsFolder, targetFolder);
-    console.log('This command is currently under construction and does not yet take aruments from CLI');
+  } else if (targetFolder === 'test-staging/') {
+    uploadUniqueFilesToS3(testBucketFolders, localRawFileNames);
+  } else if (targetFolder === 'staging/') {
+    uploadUniqueFilesToS3(liveBucketFolders, localRawFileNames);
   } else {
     console.log(`\nFolder:'${targetFolder}' does not exist`);
   }
