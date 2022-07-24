@@ -1,5 +1,5 @@
 const fs = require('fs');
-const inquirer = require('inquirer');
+const inquirer = require('inquirer'); // ESLint mad. code still runs
 const s3 = require('../s3');
 
 const uploadsFolder = 'uploads/';
@@ -35,7 +35,7 @@ const deduplicate = (localRawFileNames, existingRawFileNames) => {
 const uploadUniqueFilesToS3 = async (bucketFolder, localRawFileNames) => {
   const existingRawFileNames = await s3.listRawFileNames(bucketFolder);
   const uniqueLocalRawFileNames = deduplicate(localRawFileNames, existingRawFileNames);
-  s3.uploadFolderContents(uniqueLocalRawFileNames, uploadsFolder, targetFolder);
+  await s3.uploadFolderContents(uniqueLocalRawFileNames, uploadsFolder, targetFolder);
 };
 
 const main = async () => {
@@ -45,12 +45,12 @@ const main = async () => {
   if (!targetFolder) {
     await inquirer
       .prompt(questions)
-      .then((userAnswer) => {
+      .then(async (userAnswer) => {
         targetFolder = userAnswer.folderDestination;
         if (targetFolder === 'test-staging/') {
-          uploadUniqueFilesToS3(testBucketFolders, localRawFileNames);
+          await uploadUniqueFilesToS3(testBucketFolders, localRawFileNames);
         } else if (targetFolder === 'staging/') {
-          uploadUniqueFilesToS3(liveBucketFolders, localRawFileNames);
+          await uploadUniqueFilesToS3(liveBucketFolders, localRawFileNames);
         }
       })
       .catch((error) => {
