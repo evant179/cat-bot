@@ -3,7 +3,7 @@ const inquirer = require('inquirer'); // ESLint mad. code still runs
 const s3 = require('../s3');
 
 const uploadsFolder = 'uploads/';
-let targetFolder = process.argv.slice(2)[0];
+const targetFolderArg = process.argv.slice(2)[0];
 
 const questions = [{
   type: 'list',
@@ -32,7 +32,7 @@ const deduplicate = (localRawFileNames, existingRawFileNames) => {
   return uniqueRawFileNames;
 };
 
-const uploadUniqueFilesToS3 = async (bucketFolder, localRawFileNames) => {
+const uploadUniqueFilesToS3 = async (bucketFolder, localRawFileNames, targetFolder) => {
   const existingRawFileNames = await s3.listRawFileNames(bucketFolder);
   const uniqueLocalRawFileNames = deduplicate(localRawFileNames, existingRawFileNames);
   await s3.uploadFolderContents(uniqueLocalRawFileNames, uploadsFolder, targetFolder);
@@ -42,15 +42,15 @@ const main = async () => {
   const localRawFileNames = fs.readdirSync(uploadsFolder);
   console.log(`Total number of files found from local folder [${uploadsFolder}]: ${localRawFileNames.length}`);
 
-  if (!targetFolder) {
+  if (!targetFolderArg) {
     await inquirer
       .prompt(questions)
       .then(async (userAnswer) => {
-        targetFolder = userAnswer.folderDestination;
-        if (targetFolder === 'test-staging/') {
-          await uploadUniqueFilesToS3(testBucketFolders, localRawFileNames);
-        } else if (targetFolder === 'staging/') {
-          await uploadUniqueFilesToS3(liveBucketFolders, localRawFileNames);
+        const targetFolderAnswer = userAnswer.folderDestination;
+        if (targetFolderAnswer === 'test-staging/') {
+          await uploadUniqueFilesToS3(testBucketFolders, localRawFileNames, targetFolderAnswer);
+        } else if (targetFolderAnswer === 'staging/') {
+          await uploadUniqueFilesToS3(liveBucketFolders, localRawFileNames, targetFolderAnswer);
         }
       })
       .catch((error) => {
@@ -61,15 +61,15 @@ const main = async () => {
           console.log(error);
         }
       });
-  } else if (targetFolder === 'test-staging/') {
-    uploadUniqueFilesToS3(testBucketFolders, localRawFileNames);
-  } else if (targetFolder === 'staging/') {
-    uploadUniqueFilesToS3(liveBucketFolders, localRawFileNames);
+  } else if (targetFolderArg === 'test-staging/') {
+    uploadUniqueFilesToS3(testBucketFolders, localRawFileNames, targetFolderArg);
+  } else if (targetFolderArg === 'staging/') {
+    uploadUniqueFilesToS3(liveBucketFolders, localRawFileNames, targetFolderArg);
   } else {
-    console.log(`\nFolder:'${targetFolder}' does not exist`);
+    console.log(`\nFolder:'${targetFolderArg}' does not exist`);
   }
 };
 
 main()
-  .then(() => console.log(`Done uploading files to: ${targetFolder}`))
-  .catch((e) => console.error(`Error while uploading files to: ${targetFolder} `, e));
+  .then(() => console.log('Done uploading files!')
+    .catch((e) => console.error('Error while uploading files', e)));
