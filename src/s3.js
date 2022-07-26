@@ -27,6 +27,7 @@ const createS3Client = () => {
 
 const listObjects = async (prefix) => {
   const s3 = createS3Client();
+
   const params = {
     Bucket: S3_BUCKET_NAME,
     Prefix: prefix,
@@ -34,21 +35,20 @@ const listObjects = async (prefix) => {
     //   include the "folder" object key
     StartAfter: prefix,
   };
-  const result = await s3.listObjectsV2(params).promise();
+  const objects = [];
+  let nextToken;
 
-  let {
-    Contents: objects,
-    NextContinuationToken: nextToken,
-  } = result;
-  while (nextToken) {
+  // listObjectsV2 returns a max of 1000 objects, loop until exhausted
+  do {
     /* eslint-disable no-await-in-loop */
-    const nextResult = await s3.listObjectsV2({
+    const result = await s3.listObjectsV2({
       ...params,
       ContinuationToken: nextToken,
     }).promise();
-    objects = objects.concat(nextResult.Contents);
-    nextToken = nextResult.NextContinuationToken;
-  }
+
+    objects.push(...result.Contents);
+    nextToken = result.NextContinuationToken;
+  } while (nextToken);
 
   console.log(`Number of objects found inside '${prefix}': ${objects.length}`);
   return objects;
