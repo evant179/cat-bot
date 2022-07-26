@@ -7,7 +7,7 @@
     "test": "jest --verbose",
     "dev-test": "node test/run-local.js",
     "lint": "npx eslint src/**",
-    "full-send": "node src/utils/send-it.js"
+    "full-send": "node test/utils/send-it.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "eslint": "^8.16.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
+    "inquirer": "^8.2.4",
     "jest": "^28.1.1"
   },
   "dependencies": {
