@@ -1,6 +1,6 @@
 const fs = require('fs');
 const inquirer = require('inquirer'); // ESLint mad. code still runs
-const s3 = require('../s3');
+const s3 = require('../../src/s3');
 
 const uploadsFolder = 'uploads/';
 const targetFolderArg = process.argv.slice(2)[0];

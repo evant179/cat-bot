@@ -7,7 +7,7 @@
     "test": "jest --verbose",
     "dev-test": "node test/run-local.js",
     "lint": "npx eslint src/**",
-    "full-send": "node src/utils/send-it.js"
+    "full-send": "node test/utils/send-it.js"
   },
   "repository": {
     "type": "git",
