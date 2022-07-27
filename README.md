@@ -84,7 +84,7 @@ The [`.envrc_sample`](.envrc_sample) contains configuration values that are used
 | IS_S3_POST_PROCESSING_ENABLED | Feature flag that can be toggled based on local development needs. Defaults to true. | No |
 
 Including the following variables in [`.envrc_sample`](.envrc_sample) allow the live folders to remain undisturbed while local tests are being performed:
-| Variable name | Description | Default value (`index.js`) | Local value (`.envrc_sample and .envrc`) |
+| Variable name | Description | Default value (`index-lambda-cat-bot.js`) | Local value (`.envrc_sample and .envrc`) |
 | --- | --- | --- | --- |
 | STAGING_FOLDER | Bucket folder where images await to be tweeted | `staging/` | `test-staging/` |
 | TWEETED_FOLDER | Bucket folder where images have successfully tweeted | `tweeted/` | `test-tweeted/` |
@@ -92,7 +92,7 @@ Including the following variables in [`.envrc_sample`](.envrc_sample) allow the 
 
 ## High level diagram of cat-bot functionality :
 
-![Alt text](./cat-bot.png)
+![Alt text](./docs/cat-bot.png)
 
 ## Docs to read:
 - Twitter dev docs: https://developer.twitter.com/en/docs/platform-overview

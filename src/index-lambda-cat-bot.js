@@ -1,5 +1,5 @@
-const s3 = require('./s3');
-const twitter = require('./twitter');
+const s3 = require('./services/s3');
+const twitter = require('./services/twitter');
 
 const {
   STAGING_FOLDER = 'staging/',
