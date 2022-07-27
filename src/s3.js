@@ -25,9 +25,7 @@ const createS3Client = () => {
   });
 };
 
-const listObjects = async (prefix) => {
-  const s3 = createS3Client();
-
+const listObjects = async (prefix, s3 = createS3Client()) => {
   const params = {
     Bucket: S3_BUCKET_NAME,
     Prefix: prefix,
@@ -69,8 +67,7 @@ const listRawFileNames = async (folders) => {
   return rawFileNames;
 };
 
-const getObject = async (key) => {
-  const s3 = createS3Client();
+const getObject = async (key, s3 = createS3Client()) => {
   const params = {
     Bucket: S3_BUCKET_NAME,
     Key: key,
@@ -79,10 +76,9 @@ const getObject = async (key) => {
   return buffer;
 };
 
-const moveObject = async (key, oldPrefix, newPrefix) => {
-  console.log(`Attempt to moveObject -- key '${key}' from '${oldPrefix}' to '${newPrefix}'`);
+const moveObject = async (key, oldPrefix, newPrefix, s3 = createS3Client()) => {
   // s3 does not offer a 'move', instead, perform a 'copy' then 'delete'
-  const s3 = createS3Client();
+  console.log(`Attempt to moveObject -- key '${key}' from '${oldPrefix}' to '${newPrefix}'`);
 
   const newKey = key.replace(oldPrefix, newPrefix);
   const copyParams = {
@@ -108,11 +104,11 @@ const moveObjects = async (objects, oldPrefix, newPrefix) => {
   console.log(`Reset completed. ${newPrefix} folder is now repopulated`);
 };
 
-const uploadObject = async (fileName, filePath, targetFolder) => {
+const uploadObject = async (fileName, filePath, targetFolder, s3 = createS3Client()) => {
   if (!targetFolder) {
     throw new Error(`Invalid targetFolder value: ${targetFolder}`);
   }
-  const s3 = createS3Client();
+
   // Read content from the file
   const fileContent = fs.readFileSync(filePath);
 
