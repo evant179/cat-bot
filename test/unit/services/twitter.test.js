@@ -1,4 +1,4 @@
-const { createTweet, uploadImage } = require('../src/twitter');
+const { createTweet, uploadImage } = require('../../../src/services/twitter');
 const axios = require('axios').default;
 
 jest.mock('axios');

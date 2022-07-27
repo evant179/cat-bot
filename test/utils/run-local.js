@@ -1,4 +1,4 @@
-const { handler } = require('../src/index');
+const { handler } = require('../../src/index-lambda-cat-bot');
 
 const event = {};
 

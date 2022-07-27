@@ -2,10 +2,11 @@
   "name": "cat-bot",
   "version": "1.0.0",
   "description": "Twitter bot that tweets images from a S3 bucket on a defined time interval",
-  "main": "index.js",
+  "main": "index-lambda-cat-bot.js",
   "scripts": {
     "test": "jest --verbose",
-    "dev-test": "node test/run-local.js",
+    "coverage": "jest --verbose --coverage",
+    "dev-test": "node test/utils/run-local.js",
     "lint": "npx eslint src/**",
     "full-send": "node test/utils/send-it.js"
   },
