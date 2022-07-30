@@ -73,3 +73,5 @@ const main = async () => {
 main()
   .then(() => console.log('Done uploading files!'))
   .catch((e) => console.error('Error while uploading files', e));
+
+module.exports = {deduplicate};
