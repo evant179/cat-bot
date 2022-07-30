@@ -1,6 +1,28 @@
-test('this is a placeholder test', () => {
-  console.log('hello, i am running this test!!');
-  expect(true).toBe(true);
+const { listObjects } = require('../../../src/services/s3');
+
+afterEach(() => {
+  jest.resetAllMocks();
+});
+
+describe('listObjects', () => {
+  test('lists objects from s3 exactly once', async () => {
+    const baseResponse = require('../../data/s3-response-list-objects-v2.json');
+
+    // setup mocks
+    const listObjectsV2 = jest.fn().mockReturnValue({
+      promise: () => Promise.resolve(baseResponse),
+    });
+    const s3 = {
+      listObjectsV2,
+    };
+
+    // test
+    const result = await listObjects('my-test-folder/', s3);
+
+    // assert
+    expect(listObjectsV2).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(baseResponse.Contents);
+  });
 });
 
 // const { retryBatchWriteItem } = require('./utils');
