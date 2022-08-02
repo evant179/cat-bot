@@ -18,6 +18,16 @@ Here's how the AWS services are utilized:
 
 TODO - sequence diagrams
 
+https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid
+
+```mermaid
+sequenceDiagram
+    participant Lambda
+    participant S3
+    Lambda->>S3: test 1
+    S3->>Lambda: test 2
+```
+
 ## Local Development
 
 ### Prerequisites
@@ -83,6 +93,8 @@ The [`.envrc_sample`](.envrc_sample) contains configuration values that are used
 | IS_TWEETING_ENABLED | Feature flag that can be toggled based on local development needs. Defaults to true. | No |
 | IS_S3_POST_PROCESSING_ENABLED | Feature flag that can be toggled based on local development needs. Defaults to true. | No |
 
+TODO - add these to existing table:
+
 Including the following variables in [`.envrc_sample`](.envrc_sample) allow the live folders to remain undisturbed while local tests are being performed:
 | Variable name | Description | Default value (`index-lambda-cat-bot.js`) | Local value (`.envrc_sample and .envrc`) |
 | --- | --- | --- | --- |
@@ -90,9 +102,6 @@ Including the following variables in [`.envrc_sample`](.envrc_sample) allow the 
 | TWEETED_FOLDER | Bucket folder where images have successfully tweeted | `tweeted/` | `test-tweeted/` |
 | QUARANTINE_FOLDER | Bucket folder where images have failed to tweet | `quarantine/` | `test-quarantine/` |
 
-## High level diagram of cat-bot functionality :
-
-![Alt text](./docs/cat-bot.png)
 
 ## Docs to read:
 - Twitter dev docs: https://developer.twitter.com/en/docs/platform-overview
