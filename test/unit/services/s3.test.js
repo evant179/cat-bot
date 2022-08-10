@@ -80,3 +80,9 @@ describe('listObjects', () => {
     ]);
   });
 });
+
+// TODO: Next matt will test getObject
+
+describe('getObject', () => {
+  
+})
