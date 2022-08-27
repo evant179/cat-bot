@@ -109,3 +109,6 @@ dist
 
 # uploads folder
 uploads/
+
+#local notes
+**/test-notes.js

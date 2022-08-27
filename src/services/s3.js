@@ -79,7 +79,6 @@ const getObject = async (key, s3 = createS3Client()) => {
 const moveObject = async (key, oldPrefix, newPrefix, s3 = createS3Client()) => {
   // s3 does not offer a 'move', instead, perform a 'copy' then 'delete'
   console.log(`Attempt to moveObject -- key '${key}' from '${oldPrefix}' to '${newPrefix}'`);
-
   const newKey = key.replace(oldPrefix, newPrefix);
   const copyParams = {
     Bucket: S3_BUCKET_NAME, // destination bucket
@@ -96,10 +95,10 @@ const moveObject = async (key, oldPrefix, newPrefix, s3 = createS3Client()) => {
   console.log(`moveObject completed. Moved key '${key}' from '${oldPrefix}' to '${newPrefix}'`);
 };
 
-const moveObjects = async (objects, oldPrefix, newPrefix) => {
+const moveObjects = async (objects, oldPrefix, newPrefix, testMoveObject = moveObject()) => {
   await Promise.all(objects.map(async (imageFile) => {
     const { Key: key } = imageFile;
-    await moveObject(key, oldPrefix, newPrefix);
+    await testMoveObject(key, oldPrefix, newPrefix);
   }));
   console.log(`Reset completed. ${newPrefix} folder is now repopulated`);
 };
