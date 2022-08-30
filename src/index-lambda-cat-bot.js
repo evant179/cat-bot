@@ -41,10 +41,17 @@ const handler = async (event) => {
     }
   } catch (e) {
     const { response = {} } = e;
-    const { data } = response;
+    const { data = {} } = response;
     console.error('Twitter error details:', data);
-    await s3.moveObject(key, STAGING_FOLDER, QUARANTINE_FOLDER);
-    throw e;
+
+    if (data.status === 503) {
+      // Twitter has a bug where it returns 503 "Service Unavailable" but it still
+      //   successfully tweets the image. Gracefully handle this false alarm.
+      console.warn('503 from twitter. Assume successful tweet and gracefully handle.');
+    } else {
+      await s3.moveObject(key, STAGING_FOLDER, QUARANTINE_FOLDER);
+      throw e;
+    }
   }
 
   if (isS3PostProcessingEnabled()) {

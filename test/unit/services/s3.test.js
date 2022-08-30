@@ -168,20 +168,45 @@ describe('moveObject', () => {
 describe('moveObjects', () => {
   test('Calls moveObject on every item in an array', async () => {
     const testArray = [
-      'test-origin-folder/test-s3-object1.png',
-      'test-origin-folder/test-s3-object2.png',
+      {
+        Key: 'staging/IMG_20161216_142249.jpg',
+        LastModified: '2022-07-27T03:17:56.000Z',
+        ETag: '"4727374fff1eb029687319184bc23a10"',
+        ChecksumAlgorithm: [],
+        Size: 1761676,
+        StorageClass: 'STANDARD',
+        Body: 'sample buffer',
+      },
+      {
+        Key: 'staging/IMG_20161216_142249.jpg',
+        LastModified: '2022-07-27T03:17:56.000Z',
+        ETag: '"4727374fff1eb029687319184bc23a10"',
+        ChecksumAlgorithm: [],
+        Size: 1761676,
+        StorageClass: 'STANDARD',
+        Body: 'sample buffer',
+      }
     ]
 
     // set up mocks
-    const testmoveObject = jest.fn().mockReturnValue({
+    const deleteObject = jest.fn().mockReturnValue({
+      promise: () => Promise.resolve(),
+    });
+    const copyObject = jest.fn().mockReturnValue({
       promise: () => Promise.resolve(),
     });
 
+    const s3 = {
+      copyObject,
+      deleteObject,
+    }
+
     //test
-    const result = await moveObjects(testArray, 'test-origin-folder/', 'test-destination-folder/', testmoveObject)
+    const result = await moveObjects(testArray, 'test-origin-folder/', 'test-destination-folder/', s3)
 
     // assert
-    expect(testmoveObject).toHaveBeenCalledTimes(2);
+    expect(copyObject).toHaveBeenCalledTimes(2);
+    expect(deleteObject).toHaveBeenCalledTimes(2);
   })
 })
 // WIP ////////////////////////////////////////////////////////////////
