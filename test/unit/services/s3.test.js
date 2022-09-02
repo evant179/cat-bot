@@ -1,6 +1,6 @@
-const { 
-  listObjects, 
-  getObject, 
+const {
+  listObjects,
+  getObject,
   moveObject,
   moveObjects,
   uploadObject,
@@ -93,56 +93,34 @@ describe('listObjects', () => {
 describe('getObject', () => {
   test('Returns a buffer', async () => {
 
-  // set up mocks
-  const sampleS3Object = {
-    Key: 'staging/IMG_20161216_142249.jpg',
-    LastModified: '2022-07-27T03:17:56.000Z',
-    ETag: '"4727374fff1eb029687319184bc23a10"',
-    ChecksumAlgorithm: [],
-    Size: 1761676,
-    StorageClass: 'STANDARD',
-    Body: 'sample buffer',
-  }
-  const testGetObject = jest.fn().mockReturnValue({
-    promise: () => Promise.resolve(sampleS3Object),
-  });
-  const s3 = {
-    getObject: testGetObject,
-  };
-  const { Key: sampleKey } = sampleS3Object;
+    // set up mocks
+    const sampleS3Object = {
+      Key: 'staging/IMG_20161216_142249.jpg',
+      LastModified: '2022-07-27T03:17:56.000Z',
+      ETag: '"4727374fff1eb029687319184bc23a10"',
+      ChecksumAlgorithm: [],
+      Size: 1761676,
+      StorageClass: 'STANDARD',
+      Body: 'sample buffer',
+    }
+    const testGetObject = jest.fn().mockReturnValue({
+      promise: () => Promise.resolve(sampleS3Object),
+    });
+    const s3 = {
+      getObject: testGetObject,
+    };
+    const { Key: sampleKey } = sampleS3Object;
 
-  // test
-  const getObjectResult = await getObject(sampleKey, s3);
+    // test
+    const getObjectResult = await getObject(sampleKey, s3);
 
-  // asssert
-  expect(getObjectResult).toEqual(sampleS3Object.Body)
+    // asssert
+    expect(getObjectResult).toEqual(sampleS3Object.Body)
   });
 })
 
 describe('moveObject', () => {
-  test('Calls s3.copyObject', async () => {
-
-    // set up mocks
-    const deleteObject = jest.fn().mockReturnValue({
-      promise: () => Promise.resolve(),
-    });
-    const copyObject = jest.fn().mockReturnValue({
-      promise: () => Promise.resolve(),
-    });
-
-    const s3 = {
-      copyObject,
-      deleteObject,
-    }
-
-    //test
-    const result = await moveObject('test-origin-folder/test-s3-object.png', 'test-origin-folder/', 'test-destination-folder/', s3)
-    
-    // assert
-    expect(copyObject).toHaveBeenCalled();
-  });
-
-  test('Calls s3.deleteObject', async () => {
+  test('Calls s3.deleteObject, and s3.copyObject', async () => {
 
     // set up mocks
     const deleteObject = jest.fn().mockReturnValue({
@@ -162,6 +140,17 @@ describe('moveObject', () => {
 
     // assert
     expect(deleteObject).toHaveBeenCalled();
+    expect(copyObject).toHaveBeenCalled();
+    expect(copyObject).toHaveBeenCalledWith(
+      expect.objectContaining({
+        Key: 'test-destination-folder/test-s3-object.png',
+      }),
+    );
+    expect(deleteObject).toHaveBeenCalledWith(
+      expect.objectContaining({
+        Key: 'test-origin-folder/test-s3-object.png',
+      }),
+    );
   });
 })
 
@@ -212,7 +201,7 @@ describe('moveObjects', () => {
 // WIP ////////////////////////////////////////////////////////////////
 describe('uploadObject', () => {
   test('Sets up proper params for uploading to s3 bucket', async () => {
-    
+
     // set up mocks
 
     //test
