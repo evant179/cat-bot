@@ -1,9 +1,13 @@
-const { handler } = require('../../src/index-lambda-cat-bot');
+// const { handler, isTweetingEnabled } = require('../../src/index-lambda-cat-bot');
+const index = require('../../src/index-lambda-cat-bot');
 const s3 = require('../../src/services/s3');
 const twitter = require('../../src/services/twitter');
+const fakeImages = require('../data/s3-response-list-objects-v2.json').Contents
+const uploadImageAPIResponse = require('../data/twitter-response-upload-image.json')
 
 jest.mock('s3');
-jest.mock('twitter')
+jest.mock('twitter');
+jest.mock('index');
 
 afterEach(() => {
   jest.resetAllMocks();
@@ -16,7 +20,7 @@ test('this is a placeholder test', () => {
 
 
 test('handler exists', () => {
-  expect(handler()).toBeDefined()
+  expect(index.handler()).toBeDefined()
 })
 
 describe('Empty staging folder reaction', () => {
@@ -37,11 +41,31 @@ describe('Empty staging folder reaction', () => {
     // assert 
     // expect a error message will be returned
     // error msg: `Successfully repopulated ${STAGING_FOLDER} folder with ${TWEETED_FOLDER} contents. Proceed to rerun Lambda.`
-    await expect(handler()).rejects.toThrow('Successfully repopulated');
+    await expect(index.handler()).rejects.toThrow('Successfully repopulated');
 
     // spy.mockRestore();
   })
 })
 
 // TOTEST:
+// encodedImage is a buffer
+// twitter.uploadImage and twitter.createTweet are called if isTweetingEnabled is true
+// twitter.uploadImage is called with encodedImage
+// twitter.createTweet is called with object containing "media_id"
 // 
+
+describe('Main tweeting function', () => {
+  test('twitter.uploadImage and twitter.createTweet are called if isTweetingEnabled is true', async() => {
+    // setup mocks
+    index.isTweetingEnabled = jest.fn().mockReturnValue(true); 
+    s3.getObject = await jest.fn().mockResolvedValue('1');
+    s3.listObjects = await jest.fn().mockResolvedValue(fakeImages);
+    twitter.uploadImage = await jest.fn().mockResolvedValue(uploadImageAPIResponse)
+
+    // test
+    const test = await index.handler();
+
+    // assert
+    expect(twitter.uploadImage).toHaveBeenCalled();
+  })
+})
