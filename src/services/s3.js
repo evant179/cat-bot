@@ -96,10 +96,10 @@ const moveObject = async (key, oldPrefix, newPrefix, s3 = createS3Client()) => {
   console.log(`moveObject completed. Moved key '${key}' from '${oldPrefix}' to '${newPrefix}'`);
 };
 
-const moveObjects = async (objects, oldPrefix, newPrefix) => {
+const moveObjects = async (objects, oldPrefix, newPrefix, s3 = createS3Client()) => {
   await Promise.all(objects.map(async (imageFile) => {
     const { Key: key } = imageFile;
-    await moveObject(key, oldPrefix, newPrefix);
+    await moveObject(key, oldPrefix, newPrefix, s3);
   }));
   console.log(`Reset completed. ${newPrefix} folder is now repopulated`);
 };
