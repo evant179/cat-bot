@@ -12,12 +12,6 @@ afterEach(() => {
   jest.resetAllMocks();
 });
 
-test('this is a placeholder test', () => {
-  console.log('hello, i am running this test!!');
-  expect(true).toBe(true);
-});
-
-
 test('handler exists', () => {
   expect(handler()).toBeDefined()
 })
@@ -29,6 +23,7 @@ describe('Empty staging folder reaction', () => {
     s3.listObjects = await jest.fn().mockResolvedValue([])
 
     // test and assert
+    expect.assertions(1)
     await expect(handler()).rejects.toThrow('Successfully repopulated');
 
   })
@@ -53,7 +48,28 @@ describe('Main tweeting function', () => {
     const test = await handler();
 
     // assert
+    expect.assertions(2)
     expect(twitter.uploadImage).toHaveBeenCalled();
     expect(twitter.createTweet).toHaveBeenCalled();
+  })
+})
+
+describe('Error catch of tweeting function', () => {
+  test('Error from twitter calls handled', async () => {
+    // mock twitter API error
+    twitter.createTweet = jest.fn().mockRejectedValue(new Error('Twitter API is borked'));
+    // twitter.createTweet = jest.fn().mockRejectedValue(new Error({response: {data: 'Twitter API is borked'}}));
+    
+    // setup mocks so that images are detected in the staging folder
+    index.isTweetingEnabled = jest.fn().mockReturnValue(true); 
+    s3.getObject = await jest.fn().mockResolvedValue('1');
+    s3.listObjects = await jest.fn().mockResolvedValue(fakeImages);
+    twitter.uploadImage = await jest.fn().mockResolvedValue(uploadImageAPIResponse)
+    console.error = jest.fn()
+    
+    // test and assert
+    expect.assertions(2);
+    await expect(handler()).rejects.toThrow()
+    expect(console.error).toHaveBeenCalledWith('Twitter error details:', {})
   })
 })
