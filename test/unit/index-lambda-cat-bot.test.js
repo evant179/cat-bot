@@ -48,9 +48,11 @@ describe('Main tweeting function', () => {
     const test = await handler();
 
     // assert
-    expect.assertions(2)
+    expect.assertions(4)
     expect(twitter.uploadImage).toHaveBeenCalled();
+    expect(twitter.uploadImage).toHaveBeenCalledWith(expect.stringContaining(''));
     expect(twitter.createTweet).toHaveBeenCalled();
+    expect(twitter.createTweet).toHaveBeenCalledWith(expect.objectContaining({media_id: 1533168952922108000}));
   })
 })
 
@@ -66,7 +68,7 @@ describe('Error catch of tweeting function', () => {
     s3.listObjects = await jest.fn().mockResolvedValue(fakeImages);
     twitter.uploadImage = await jest.fn().mockResolvedValue(uploadImageAPIResponse)
     console.error = jest.fn()
-    
+
     // test and assert
     expect.assertions(2);
     await expect(handler()).rejects.toThrow()
