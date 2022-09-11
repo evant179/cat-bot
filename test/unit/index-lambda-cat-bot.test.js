@@ -1,4 +1,4 @@
-// const { handler, isTweetingEnabled } = require('../../src/index-lambda-cat-bot');
+const { handler} = require('../../src/index-lambda-cat-bot');
 const index = require('../../src/index-lambda-cat-bot');
 const s3 = require('../../src/services/s3');
 const twitter = require('../../src/services/twitter');
@@ -7,7 +7,6 @@ const uploadImageAPIResponse = require('../data/twitter-response-upload-image.js
 
 jest.mock('s3');
 jest.mock('twitter');
-jest.mock('index');
 
 afterEach(() => {
   jest.resetAllMocks();
@@ -20,30 +19,18 @@ test('this is a placeholder test', () => {
 
 
 test('handler exists', () => {
-  expect(index.handler()).toBeDefined()
+  expect(handler()).toBeDefined()
 })
 
 describe('Empty staging folder reaction', () => {
   test('Staging folder gets repopulated if it is empty', async() => {
     // setup mocks
-    // mock listObjects so that it returns an empty array
-
-    // const spy = await jest.spyOn(s3, 'listObjects');
-    // spy.mockReturnValue([]);
-
+    // mock empty staging folder
     s3.listObjects = await jest.fn().mockResolvedValue([])
-    // s3.listObjects.mockResolvedValue([])
 
-    // test
-    // call handler
-    // const test = async() => await handler()
+    // test and assert
+    await expect(handler()).rejects.toThrow('Successfully repopulated');
 
-    // assert 
-    // expect a error message will be returned
-    // error msg: `Successfully repopulated ${STAGING_FOLDER} folder with ${TWEETED_FOLDER} contents. Proceed to rerun Lambda.`
-    await expect(index.handler()).rejects.toThrow('Successfully repopulated');
-
-    // spy.mockRestore();
   })
 })
 
@@ -56,16 +43,17 @@ describe('Empty staging folder reaction', () => {
 
 describe('Main tweeting function', () => {
   test('twitter.uploadImage and twitter.createTweet are called if isTweetingEnabled is true', async() => {
-    // setup mocks
+    // setup mocks so that images are detected in the staging folder
     index.isTweetingEnabled = jest.fn().mockReturnValue(true); 
     s3.getObject = await jest.fn().mockResolvedValue('1');
     s3.listObjects = await jest.fn().mockResolvedValue(fakeImages);
     twitter.uploadImage = await jest.fn().mockResolvedValue(uploadImageAPIResponse)
 
     // test
-    const test = await index.handler();
+    const test = await handler();
 
     // assert
     expect(twitter.uploadImage).toHaveBeenCalled();
+    expect(twitter.createTweet).toHaveBeenCalled();
   })
 })
