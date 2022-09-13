@@ -1,4 +1,3 @@
-const { handler } = require('../../src/index-lambda-cat-bot');
 const index = require('../../src/index-lambda-cat-bot');
 const s3 = require('../../src/services/s3');
 const twitter = require('../../src/services/twitter');
@@ -12,10 +11,6 @@ afterEach(() => {
   jest.resetAllMocks();
 });
 
-test('handler exists', () => {
-  expect(handler()).toBeDefined();
-})
-
 describe('Empty staging folder reaction', () => {
   test('Staging folder gets repopulated if it is empty', async () => {
     // setup mocks
@@ -24,7 +19,7 @@ describe('Empty staging folder reaction', () => {
 
     // test and assert
     expect.assertions(1)
-    await expect(handler()).rejects.toThrow('Successfully repopulated');
+    await expect(index.handler).rejects.toThrow('Successfully repopulated');
 
   })
 })
@@ -38,7 +33,7 @@ describe('Main tweeting function', () => {
     twitter.uploadImage = await jest.fn().mockResolvedValue(uploadImageAPIResponse)
 
     // test
-    const test = await handler();
+    const test = await index.handler();
 
     // assert
     expect.assertions(4)
@@ -63,7 +58,7 @@ describe('Error catch of tweeting function', () => {
 
     // test and assert
     expect.assertions(2);
-    await expect(handler()).rejects.toThrow();
+    await expect(index.handler).rejects.toThrow();
     expect(console.error).toHaveBeenCalledWith('Twitter error details:', {});
   })
 })
