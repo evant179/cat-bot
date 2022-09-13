@@ -11,7 +11,26 @@ afterEach(() => {
   jest.resetAllMocks();
 });
 
-describe('Empty staging folder reaction', () => {
+describe('handler', () => {
+  
+  test('twitter.uploadImage and twitter.createTweet are called if isTweetingEnabled is true', async () => {
+    // setup mocks so that images are detected in the staging folder
+    index.isTweetingEnabled = jest.fn().mockReturnValue(true);
+    s3.getObject = await jest.fn().mockResolvedValue('1');
+    s3.listObjects = await jest.fn().mockResolvedValue(fakeImages);
+    twitter.uploadImage = await jest.fn().mockResolvedValue(uploadImageAPIResponse)
+    
+    // test
+    const test = await index.handler();
+    
+    // assert
+    expect.assertions(4)
+    expect(twitter.uploadImage).toHaveBeenCalled();
+    expect(twitter.uploadImage).toHaveBeenCalledWith(expect.stringContaining(''));
+    expect(twitter.createTweet).toHaveBeenCalled();
+    expect(twitter.createTweet).toHaveBeenCalledWith(expect.objectContaining({ media_id: 1533168952922108000 }));
+  })
+  
   test('Staging folder gets repopulated if it is empty', async () => {
     // setup mocks
     // mock empty staging folder
@@ -22,29 +41,7 @@ describe('Empty staging folder reaction', () => {
     await expect(index.handler).rejects.toThrow('Successfully repopulated');
 
   })
-})
-
-describe('Main tweeting function', () => {
-  test('twitter.uploadImage and twitter.createTweet are called if isTweetingEnabled is true', async () => {
-    // setup mocks so that images are detected in the staging folder
-    index.isTweetingEnabled = jest.fn().mockReturnValue(true);
-    s3.getObject = await jest.fn().mockResolvedValue('1');
-    s3.listObjects = await jest.fn().mockResolvedValue(fakeImages);
-    twitter.uploadImage = await jest.fn().mockResolvedValue(uploadImageAPIResponse)
-
-    // test
-    const test = await index.handler();
-
-    // assert
-    expect.assertions(4)
-    expect(twitter.uploadImage).toHaveBeenCalled();
-    expect(twitter.uploadImage).toHaveBeenCalledWith(expect.stringContaining(''));
-    expect(twitter.createTweet).toHaveBeenCalled();
-    expect(twitter.createTweet).toHaveBeenCalledWith(expect.objectContaining({ media_id: 1533168952922108000 }));
-  })
-})
-
-describe('Error catch of tweeting function', () => {
+  
   test('Error from twitter calls handled', async () => {
     // mock twitter API error
     twitter.createTweet = jest.fn().mockRejectedValue(new Error('Twitter API is borked'));
